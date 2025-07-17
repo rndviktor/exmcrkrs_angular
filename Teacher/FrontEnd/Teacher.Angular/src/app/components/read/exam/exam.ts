@@ -16,7 +16,7 @@ import {Question} from '../question/question';
         <li><app-question [question]="question" /></li>
       }
     </ul>
-    <button class="bg-indigo-200 flex-none shadow-xl">Add Question</button>
+    <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl">Add Question</button>
   </div>`
 })
 export class Exam {
