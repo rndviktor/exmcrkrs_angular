@@ -4,19 +4,19 @@ import {Observable} from 'rxjs';
 
 
 export interface AnswerType {
-  id: string;
+  answerId: string;
   content: string;
   isCorrect: boolean;
 }
 
 export interface QuestionType {
-  id: string;
+  questionId: string;
   content: string;
   answers: AnswerType[];
 }
 export interface ExamType {
   // Define the interface or use 'any'
-  id: string;
+  examId: string;
   title: string;
   questions: QuestionType[];
 }

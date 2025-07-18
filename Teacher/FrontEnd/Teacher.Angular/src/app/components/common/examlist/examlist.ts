@@ -10,7 +10,7 @@ import {Exam} from '../exam/exam';
   ],
   template: `
     <ul>
-      @for (ex of exams; track ex.id) {
+      @for (ex of exams; track ex.examId) {
         <app-exam [exam]="ex" />
       }
     </ul>

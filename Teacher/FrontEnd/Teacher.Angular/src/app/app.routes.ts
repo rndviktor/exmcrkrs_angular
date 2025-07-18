@@ -9,7 +9,7 @@ export const routes: Routes = [
     title: 'ExamList',
   },
   {
-    path: 'addQuestion',
+    path: 'addQuestion/:id',
     component: QuestionEdit,
     title: 'QuestionEdit',
   }

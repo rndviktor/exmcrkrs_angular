@@ -13,7 +13,7 @@ import {Answer} from '../answer/answer';
     <div class="p-4 bg-indigo-100">
       <h2 class="text-3xl outline bg-white">{{question.content}}</h2>
       <ul>
-        @for (ans of question.answers; track ans.id) {
+        @for (ans of question.answers; track ans.answerId) {
           <li><app-answer [answer]="ans" /></li>
         }
       </ul>

@@ -12,7 +12,7 @@ import {Question} from '../question/question';
   template: `<div class="flex flex-col p-8 ">
     <h3 class="text-3xl font-bold">{{exam.title}}</h3>
     <ul>
-      @for (question of exam.questions; track question.id) {
+      @for (question of exam.questions; track question.questionId) {
         <li><app-question [question]="question" /></li>
       }
     </ul>
