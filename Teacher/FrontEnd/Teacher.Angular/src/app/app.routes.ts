@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import {Examlist} from './components/read/examlist/examlist';
+import {Examlist} from './components/common/examlist/examlist';
 import {QuestionEdit} from './components/write/questionEdit/questionEdit';
 
 export const routes: Routes = [
