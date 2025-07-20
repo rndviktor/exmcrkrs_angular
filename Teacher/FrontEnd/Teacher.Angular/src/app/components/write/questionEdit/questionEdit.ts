@@ -47,7 +47,7 @@ export class QuestionEdit implements OnInit {
     } else {
       this.writer.postQuestion(examId!, { content: content! }).then(response => {
         const { id } = response;
-        this.router.navigate([examId, 'editQuestion', id]);
+        this.router.navigate(['exam', examId, 'editQuestion', id]);
       });
     }
   }

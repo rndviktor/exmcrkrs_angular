@@ -14,7 +14,7 @@ import {Router} from '@angular/router';
     <h3 class="text-3xl font-bold">{{exam.title}}</h3>
     <ul>
       @for (question of exam.questions; track question.questionId) {
-        <li><app-question [question]="question" /></li>
+        <li><app-question [question]="question" [examId]="exam.examId"/></li>
       }
     </ul>
     <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="addQuestionRoute()">Add Question</button>
@@ -27,6 +27,6 @@ export class Exam {
   @Input() exam!: ExamType;
 
   addQuestionRoute() {
-    this.router.navigate([this.exam.examId, 'addQuestion']);
+    this.router.navigate(['exam', this.exam.examId, 'addQuestion']);
   }
 }
