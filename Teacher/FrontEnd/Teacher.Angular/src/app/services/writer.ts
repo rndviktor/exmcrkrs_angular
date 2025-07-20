@@ -22,4 +22,9 @@ export class Writer {
     const target = `${this.baseUrl}/${this.apiPrefix}/editQuestionContent/${examId}`;
     return await this.http.put<any>(target, question).toPromise();
   }
+
+  async deleteQuestion(examId: string, questionId: string): Promise<any> {
+    const target = `${this.baseUrl}/${this.apiPrefix}/removeQuestion/${examId}`;
+    return await this.http.delete<any>(target, { body: { questionId } }).toPromise();
+  }
 }

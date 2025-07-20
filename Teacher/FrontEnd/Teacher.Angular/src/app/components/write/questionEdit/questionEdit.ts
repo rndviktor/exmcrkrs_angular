@@ -5,21 +5,28 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import {QuestionType, Reader} from '../../../services/reader';
 import {HomeButton} from '../../common/iconed/home-button';
+import {Confirmation} from '../../common/confirmation/confirmation';
+import {XButton} from '../../common/iconed/x-button';
 
 @Component({
   selector: 'app-question',
-  imports: [ContentEditorFormComponent, HomeButton],
+  imports: [ContentEditorFormComponent, HomeButton, Confirmation, XButton],
   template: `<div class="flex flex-col p-8 ">
-    <div class="flex flex-row">
+    <div class="flex flex-row justify-between">
       <app-home-button (click)="routeHome()" />
+      <app-x-button (click)="showConfirm(true)" />
     </div>
     <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="question?.content" [isEditMode]="editMode"/>
-  </div>`,
+  </div>
+  <app-confirmation [visible]="confirmVisible" [message]="'Do you really want to delete this question?'" (confirmed)="handleConfirmation($event)" />
+  `,
 })
 export class QuestionEdit implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   editMode: boolean = false;
   question: QuestionType | null = null;
+
+  confirmVisible = false;
 
   constructor(private writer: Writer, private reader: Reader, private route: ActivatedRoute, private router: Router) {
   }
@@ -46,6 +53,21 @@ export class QuestionEdit implements OnInit {
 
   routeHome() {
     this.router.navigate(['/']);
+  }
+
+  showConfirm(visible: boolean) {
+    this.confirmVisible = visible;
+  }
+
+  handleConfirmation(confirmed: boolean) {
+    this.confirmVisible = false;
+    if (confirmed) {
+      const examId = this.activatedRoute.snapshot.paramMap.get('examId');
+      this.writer.deleteQuestion(examId!, this.question?.questionId!).then(response => {
+        console.log('got response', response);
+        this.router.navigate(['/']);
+      })
+    }
   }
 
   handleContentSubmit(data: {content: string|null}) {
