@@ -1,7 +1,8 @@
-import {Component, Input, input, signal} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ExamType} from '../../../services/reader';
 import {Question} from '../question/question';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-exam',
@@ -16,11 +17,16 @@ import {Question} from '../question/question';
         <li><app-question [question]="question" /></li>
       }
     </ul>
-    <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl">Add Question</button>
+    <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="addQuestionRoute()">Add Question</button>
   </div>`
 })
 export class Exam {
+  constructor(private router: Router) {
+  }
+
   @Input() exam!: ExamType;
 
-
+  addQuestionRoute() {
+    this.router.navigate([this.exam.examId, 'addQuestion']);
+  }
 }
