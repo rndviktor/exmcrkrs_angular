@@ -4,11 +4,15 @@ import {Writer} from '../../../services/writer';
 import {ActivatedRoute, Router} from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import {QuestionType, Reader} from '../../../services/reader';
+import {HomeButton} from '../../common/iconed/home-button';
 
 @Component({
   selector: 'app-question',
-  imports: [ContentEditorFormComponent],
+  imports: [ContentEditorFormComponent, HomeButton],
   template: `<div class="flex flex-col p-8 ">
+    <div class="flex flex-row">
+      <app-home-button (click)="routeHome()" />
+    </div>
     <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="question?.content" [isEditMode]="editMode"/>
   </div>`,
 })
@@ -39,6 +43,11 @@ export class QuestionEdit implements OnInit {
       }
     });
   }
+
+  routeHome() {
+    this.router.navigate(['/']);
+  }
+
   handleContentSubmit(data: {content: string|null}) {
     const { content } = data;
     const examId = this.activatedRoute.snapshot.paramMap.get('examId');
