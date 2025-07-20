@@ -8,13 +8,14 @@ import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, V
     <form class="flex flex-col" [formGroup]="form" (ngSubmit)="onSubmit()" >
       <label for="content">Content:</label>
       <textarea id="content" type="text" formControlName="content"></textarea>
-      <button type="submit" [disabled]="form.pristine || form.invalid" class="bg-indigo-200 hover:bg-indigo-400 disabled:bg-indigo-50 flex-none shadow-xl" >Submit</button>
+      <button type="submit" [disabled]="form.pristine || form.invalid" class="bg-indigo-200 hover:bg-indigo-400 disabled:bg-indigo-50 flex-none shadow-xl" >{{this.isEditMode ? 'Update' : 'Create'}}</button>
     </form>
   </div>`,
 })
 export class ContentEditorFormComponent implements OnChanges{
   form: FormGroup;
   @Input() content: any;
+  @Input() isEditMode = false;
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({

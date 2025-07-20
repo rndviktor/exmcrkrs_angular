@@ -9,7 +9,7 @@ import {QuestionType, Reader} from '../../../services/reader';
   selector: 'app-question',
   imports: [ContentEditorFormComponent],
   template: `<div class="flex flex-col p-8 ">
-    <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="question?.content" />
+    <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="question?.content" [isEditMode]="editMode"/>
   </div>`,
 })
 export class QuestionEdit implements OnInit {
