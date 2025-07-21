@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ContentEditorFormComponent} from './contentEditorForm';
 import {Writer} from '../../../services/writer';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -7,24 +7,36 @@ import {QuestionType, Reader} from '../../../services/reader';
 import {HomeButton} from '../../common/iconed/home-button';
 import {Confirmation} from '../../common/confirmation/confirmation';
 import {XButton} from '../../common/iconed/x-button';
+import {Answer} from '../../common/answer/answer';
 
 @Component({
   selector: 'app-question',
-  imports: [ContentEditorFormComponent, HomeButton, Confirmation, XButton],
-  template: `<div class="flex flex-col p-8 ">
-    <div class="flex flex-row justify-between">
-      <app-home-button (click)="routeHome()" />
-      <app-x-button (click)="showConfirm(true)" />
+  imports: [ContentEditorFormComponent, HomeButton, Confirmation, XButton, Answer],
+  template: `
+    <div class="flex flex-col p-8 ">
+      <div class="flex flex-row justify-between">
+        <app-home-button (click)="routeHome()"/>
+        <app-x-button (click)="showConfirm(true)"/>
+      </div>
+      <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="question?.content"
+                               [isEditMode]="editMode"/>
+      @if (question?.answers?.length) {
+        <ul>
+          @for (ans of question?.answers; track ans.answerId) {
+            <li><app-answer [answer]="ans" [examId]="examId!" [questionId]="question?.questionId!" (questionNeedsUpdate)="answerDeleted()"/></li>
+          }
+        </ul>
+      }
     </div>
-    <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="question?.content" [isEditMode]="editMode"/>
-  </div>
-  <app-confirmation [visible]="confirmVisible" [message]="'Do you really want to delete this question?'" (confirmed)="handleConfirmation($event)" />
+    <app-confirmation [visible]="confirmVisible" [message]="'Do you really want to delete this question?'"
+                      (confirmed)="handleConfirmation($event)"/>
   `,
 })
 export class QuestionEdit implements OnInit {
-  private activatedRoute = inject(ActivatedRoute);
   editMode: boolean = false;
   question: QuestionType | null = null;
+  examId: string|null = null;
+  questionId: string | null = null;
 
   confirmVisible = false;
 
@@ -34,10 +46,11 @@ export class QuestionEdit implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.pipe(
       switchMap(params => {
-        const questionId = params.get('questionId');
-        this.editMode = !!questionId;
+        this.questionId = params.get('questionId');
+        this.examId = params.get('examId');
+        this.editMode = !!this.questionId;
         if (this.editMode) {
-          return this.reader.getQuestionById(questionId!);
+          return this.reader.getQuestionById(this.questionId!);
         } else {
           return [];
         }
@@ -51,6 +64,20 @@ export class QuestionEdit implements OnInit {
     });
   }
 
+  refreshData(): void {
+    this.reader.getQuestionById(this.questionId!).subscribe({
+      next: (item: any) => {
+        if (this.editMode && item) {
+          this.question = item.question;
+        }
+      }
+    })
+  }
+
+  answerDeleted() {
+    this.refreshData()
+  }
+
   routeHome() {
     this.router.navigate(['/']);
   }
@@ -62,23 +89,21 @@ export class QuestionEdit implements OnInit {
   handleConfirmation(confirmed: boolean) {
     this.confirmVisible = false;
     if (confirmed) {
-      const examId = this.activatedRoute.snapshot.paramMap.get('examId');
-      this.writer.deleteQuestion(examId!, this.question?.questionId!).then(response => {
+      this.writer.removeQuestion(this.examId!, this.question?.questionId!).then(response => {
         console.log('got response', response);
-        this.router.navigate(['/']);
+        this.refreshData();
       })
     }
   }
 
   handleContentSubmit(data: {content: string|null}) {
     const { content } = data;
-    const examId = this.activatedRoute.snapshot.paramMap.get('examId');
     if (this.editMode) {
-      this.writer.updateQuestionContent(examId!, { questionId: this.question?.questionId, content: content });
+      this.writer.updateQuestionContent(this.examId!, { questionId: this.question?.questionId, content: content });
     } else {
-      this.writer.postQuestion(examId!, { content: content! }).then(response => {
+      this.writer.postQuestion(this.examId!, { content: content! }).then(response => {
         const { id } = response;
-        this.router.navigate(['exam', examId, 'editQuestion', id]);
+        this.router.navigate(['exam', this.examId, 'editQuestion', id]);
       });
     }
   }

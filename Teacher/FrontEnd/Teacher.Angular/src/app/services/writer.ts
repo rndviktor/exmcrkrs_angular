@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {QuestionType} from './reader';
-import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +8,7 @@ import {Observable} from 'rxjs';
 export class Writer {
   private baseUrl: string = 'http://localhost:5010';
   private apiPrefix: string = 'api/v1';
+  private teacherId: string = '330125ae-bdc8-44a1-a90c-aa293445be3e';
 
 
   constructor(private http: HttpClient) {}
@@ -23,8 +23,18 @@ export class Writer {
     return await this.http.put<any>(target, question).toPromise();
   }
 
-  async deleteQuestion(examId: string, questionId: string): Promise<any> {
+  async removeAnswer(examId: string, questionId: string, answerId: string): Promise<any> {
+    const target = `${this.baseUrl}/${this.apiPrefix}/removeAnswer/${examId}`;
+    return await this.http.delete<any>(target, { body: { questionId, answerId } }).toPromise();
+  }
+
+  async removeQuestion(examId: string, questionId: string): Promise<any> {
     const target = `${this.baseUrl}/${this.apiPrefix}/removeQuestion/${examId}`;
     return await this.http.delete<any>(target, { body: { questionId } }).toPromise();
+  }
+
+  async deleteExam(examId: string): Promise<any> {
+    const target = `${this.baseUrl}/${this.apiPrefix}/deleteExam/${examId}`;
+    return await this.http.delete<any>(target, { body: { authorId: this.teacherId } }).toPromise();
   }
 }

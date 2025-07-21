@@ -11,7 +11,7 @@ import {Exam} from '../exam/exam';
   template: `
     <ul>
       @for (ex of exams; track ex.examId) {
-        <app-exam [exam]="ex" />
+        <app-exam [exam]="ex" (listNeedsUpdate)="handleListUpdate()" />
       }
     </ul>
   `
@@ -21,6 +21,10 @@ export class Examlist {
 
   exams: ExamType[] = [];
   constructor(private reader: Reader) {
+    this.handleListUpdate();
+  }
+
+  handleListUpdate() {
     this.reader.getData()
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
