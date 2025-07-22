@@ -29,7 +29,7 @@ import {TrashButton} from '../../common/iconed/trash-button';
                 <app-answer
                   [answer]="ans"
                   [examId]="examId!"
-                  [disableDeletion]="addAnswerMode"
+                  [disableDeletion]="addAnswerMode || (!!editedAnswerId && editedAnswerId !== ans.answerId)"
                   [questionId]="question?.questionId!"
                   (questionNeedsUpdate)="answersListUpdated()"
                   (questionTriggerEdit)="handleAnswerDoubleClick($event)"/>
