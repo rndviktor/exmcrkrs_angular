@@ -1,11 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-trash-button',
   imports: [],
   template: `<button
-    class="inline-flex items-center px-0.5 mx-0.5 py-1.5 bg-indigo-200 hover:bg-red-900 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+    class="inline-flex items-center px-0.5 mx-0.5 py-1.5 bg-indigo-200 disabled:bg-indigo-100 hover:bg-red-900 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
     aria-label="Edit"
+    [disabled]="disabled"
     type="button"
   >
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -15,4 +16,6 @@ import {Component} from '@angular/core';
   </button>
 `
 })
-export class TrashButton {}
+export class TrashButton {
+  @Input() disabled: boolean = false;
+}

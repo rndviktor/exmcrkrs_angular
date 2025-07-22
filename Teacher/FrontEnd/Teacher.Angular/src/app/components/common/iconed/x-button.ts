@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
   selector: 'app-x-button',
   imports: [],
   template: `<button
-    class="inline-flex items-center px-0.5 mx-0.5 py-1.5 bg-indigo-200 hover:bg-red-900 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+    class="inline-flex items-center px-0.5 mx-0.5 py-1.5 bg-indigo-200 disabled:bg-indigo-100 hover:bg-red-900 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
     aria-label="Edit"
     type="button"
   >
