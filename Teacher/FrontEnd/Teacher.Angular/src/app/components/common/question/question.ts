@@ -3,10 +3,10 @@ import {QuestionType} from '../../../services/reader';
 import {CommonModule} from '@angular/common';
 import {Answer} from '../answer/answer';
 import {PencilButton} from '../iconed/pencil-button';
-import {XButton} from '../iconed/x-button';
 import {Router} from '@angular/router';
 import {Confirmation} from '../confirmation/confirmation';
 import {Writer} from '../../../services/writer';
+import {TrashButton} from '../iconed/trash-button';
 
 @Component({
   selector: 'app-question',
@@ -14,15 +14,15 @@ import {Writer} from '../../../services/writer';
     CommonModule,
     Answer,
     PencilButton,
-    XButton,
-    Confirmation
+    Confirmation,
+    TrashButton
   ],
   template: `
     <div class="p-4 bg-indigo-100">
       <div class="grid grid-cols-12 gap-4">
         <h2 class="col-span-10 text-3xl outline bg-white">{{question.content}}</h2>
         <app-pencil-button class="col-span-1" (click)="editQuestionRoute()"/>
-        <app-x-button class="col-span-1" (click)="handleDeleteCall()"/>
+        <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
       </div>
       <ul>
         @for (ans of question.answers; track ans.answerId) {

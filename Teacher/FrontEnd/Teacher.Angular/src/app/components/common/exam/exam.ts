@@ -4,8 +4,8 @@ import {ExamType} from '../../../services/reader';
 import {Question} from '../question/question';
 import {Router} from '@angular/router';
 import {Confirmation} from '../confirmation/confirmation';
-import {XButton} from '../iconed/x-button';
 import {Writer} from '../../../services/writer';
+import {TrashButton} from '../iconed/trash-button';
 
 @Component({
   selector: 'app-exam',
@@ -13,12 +13,12 @@ import {Writer} from '../../../services/writer';
     Question,
     CommonModule,
     Confirmation,
-    XButton,
+    TrashButton,
   ],
   template: `<div class="flex flex-col p-8 ">
     <div class="flex flex-row justify-between">
       <h3 class="text-3xl font-bold">{{exam.title}}</h3>
-      <app-x-button class="col-span-1" (click)="handleDeleteCall()"/>
+      <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
     </div>
     <ul>
       @for (question of exam.questions; track question.questionId) {
