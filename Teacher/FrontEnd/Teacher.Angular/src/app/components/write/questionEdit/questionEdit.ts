@@ -6,26 +6,47 @@ import { switchMap } from 'rxjs/operators';
 import {QuestionType, Reader} from '../../../services/reader';
 import {HomeButton} from '../../common/iconed/home-button';
 import {Confirmation} from '../../common/confirmation/confirmation';
-import {XButton} from '../../common/iconed/x-button';
 import {Answer} from '../../common/answer/answer';
+import {AnswerEdit} from '../answer-edit/answer-edit';
+import {TrashButton} from '../../common/iconed/trash-button';
 
 @Component({
   selector: 'app-question',
-  imports: [ContentEditorFormComponent, HomeButton, Confirmation, XButton, Answer],
+  imports: [ContentEditorFormComponent, HomeButton, Confirmation, Answer, AnswerEdit, TrashButton],
   template: `
     <div class="flex flex-col p-8 ">
       <div class="flex flex-row justify-between">
         <app-home-button (click)="routeHome()"/>
-        <app-x-button (click)="showConfirm(true)"/>
+        <app-trash-button (click)="showConfirm(true)"/>
       </div>
       <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="question?.content"
                                [isEditMode]="editMode"/>
       @if (question?.answers?.length) {
         <ul>
           @for (ans of question?.answers; track ans.answerId) {
-            <li><app-answer [answer]="ans" [examId]="examId!" [questionId]="question?.questionId!" (questionNeedsUpdate)="answerDeleted()"/></li>
+            <li>
+              @if (editedAnswerId !== ans.answerId) {
+                <app-answer
+                  [answer]="ans"
+                  [examId]="examId!"
+                  [disableDeletion]="addAnswerMode"
+                  [questionId]="question?.questionId!"
+                  (questionNeedsUpdate)="answersListUpdated()"
+                  (questionTriggerEdit)="handleAnswerDoubleClick($event)"/>
+              } @else {
+                <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()" (submitSucceed)="answersListUpdated()"/>
+              }
+
+            </li>
           }
         </ul>
+      }
+      @if (addAnswerMode) {
+        <app-answer-edit [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()" (submitSucceed)="answersListUpdated()"/>
+      } @else if (!editedAnswerId) {
+        <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddAnswerPressed()">Add
+          Answer
+        </button>
       }
     </div>
     <app-confirmation [visible]="confirmVisible" [message]="'Do you really want to delete this question?'"
@@ -37,10 +58,25 @@ export class QuestionEdit implements OnInit {
   question: QuestionType | null = null;
   examId: string|null = null;
   questionId: string | null = null;
+  addAnswerMode: boolean = false;
+  editedAnswerId: string|null = null;
 
   confirmVisible = false;
 
   constructor(private writer: Writer, private reader: Reader, private route: ActivatedRoute, private router: Router) {
+  }
+
+  handleAddAnswerPressed() {
+    this.addAnswerMode = true;
+  }
+
+  handleAnswerDoubleClick(data: any) {
+    this.editedAnswerId = data;
+  }
+
+  handleDiscardCalled() {
+    this.addAnswerMode = false;
+    this.editedAnswerId = null;
   }
 
   ngOnInit(): void {
@@ -74,8 +110,9 @@ export class QuestionEdit implements OnInit {
     })
   }
 
-  answerDeleted() {
+  answersListUpdated() {
     this.refreshData()
+    this.handleDiscardCalled();
   }
 
   routeHome() {
@@ -90,7 +127,6 @@ export class QuestionEdit implements OnInit {
     this.confirmVisible = false;
     if (confirmed) {
       this.writer.removeQuestion(this.examId!, this.question?.questionId!).then(response => {
-        console.log('got response', response);
         this.refreshData();
       })
     }

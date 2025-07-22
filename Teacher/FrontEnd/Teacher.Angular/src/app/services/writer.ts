@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {QuestionType} from './reader';
+import {AnswerType, QuestionType} from './reader';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,16 @@ export class Writer {
   async updateQuestionContent(examId: string, question: QuestionType){
     const target = `${this.baseUrl}/${this.apiPrefix}/editQuestionContent/${examId}`;
     return await this.http.put<any>(target, question).toPromise();
+  }
+
+  async addAnswer(examId: string, questionId: string, answer: AnswerType): Promise<any> {
+    const target = `${this.baseUrl}/${this.apiPrefix}/addAnswer/${examId}`;
+    return await this.http.put<any>(target, { ...answer, questionId }).toPromise();
+  }
+
+  async updateAnswer(examId: string, questionId: string, answer: AnswerType): Promise<any> {
+    const target = `${this.baseUrl}/${this.apiPrefix}/editAnswer/${examId}`;
+    return await this.http.put<any>(target, { ...answer, questionId }).toPromise();
   }
 
   async removeAnswer(examId: string, questionId: string, answerId: string): Promise<any> {
