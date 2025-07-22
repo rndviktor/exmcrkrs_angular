@@ -31,7 +31,6 @@ import {XButton} from '../../common/iconed/x-button';
 })
 export class AnswerEdit implements OnChanges {
   form: FormGroup;
-  editMode: boolean = false;
   @Input() answer: AnswerType | null = null;
   @Input() questionId: string|null = null;
   @Input() examId: string|null = null;
