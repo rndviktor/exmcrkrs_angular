@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {QuestionType} from '../../../services/reader';
 import {CommonModule} from '@angular/common';
 import {Answer} from '../answer/answer';
@@ -20,7 +20,7 @@ import {TrashButton} from '../iconed/trash-button';
   template: `
     <div class="p-4 bg-indigo-100">
       <div class="grid grid-cols-12 gap-4">
-        <h2 class="col-span-10 text-3xl outline bg-white">{{question.content}}</h2>
+        <div #contentDiv class="whitespace-pre-wrap col-span-10 outline bg-white" [style.height.px]="dynamicHeight">{{question.content}}</div>
         <app-pencil-button class="col-span-1" (click)="editQuestionRoute()"/>
         <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
       </div>
@@ -33,8 +33,23 @@ import {TrashButton} from '../iconed/trash-button';
     <app-confirmation [visible]="confirmQuestionVisible" [message]="'Do you really want to delete this question?'" (confirmed)="handleConfirmation($event)" />
   `,
 })
-export class Question {
+export class Question implements AfterViewInit {
+  @ViewChild('contentDiv') contentDiv!: ElementRef<HTMLDivElement>;
   @Input() question!: QuestionType;
+
+  dynamicHeight = 0;
+
+  ngAfterViewInit() {
+    this.updateHeight();
+  }
+
+  updateHeight() {
+    if (this.contentDiv) {
+      setTimeout(() => {
+        this.dynamicHeight = this.contentDiv.nativeElement.scrollHeight;
+      }, 0);
+    }
+  }
 
   @Input() examId: string | null = null;
 
