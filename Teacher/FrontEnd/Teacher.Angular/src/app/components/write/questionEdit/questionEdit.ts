@@ -36,14 +36,13 @@ import {TrashButton} from '../../common/iconed/trash-button';
               } @else {
                 <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()" (submitSucceed)="answersListUpdated()"/>
               }
-
             </li>
           }
         </ul>
       }
       @if (addAnswerMode) {
         <app-answer-edit [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()" (submitSucceed)="answersListUpdated()"/>
-      } @else if (!editedAnswerId) {
+      } @else if (!editedAnswerId && !!questionId) {
         <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddAnswerPressed()">Add
           Answer
         </button>
