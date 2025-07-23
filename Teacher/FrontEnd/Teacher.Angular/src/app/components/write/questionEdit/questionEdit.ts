@@ -126,7 +126,7 @@ export class QuestionEdit implements OnInit {
     this.confirmVisible = false;
     if (confirmed) {
       this.writer.removeQuestion(this.examId!, this.question?.questionId!).then(response => {
-        this.refreshData();
+        this.routeHome();
       })
     }
   }
