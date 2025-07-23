@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {AnswerType, QuestionType} from './reader';
+import {AnswerType, ExamType, QuestionType} from './reader';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,16 @@ export class Writer {
 
 
   constructor(private http: HttpClient) {}
+
+  async createExam(exam: ExamType) {
+    const target = `${this.baseUrl}/${this.apiPrefix}/newExam`;
+    return await this.http.post<any>(target, {...exam, authorId: this.teacherId}).toPromise();
+  }
+
+  async updateExamTitle(exam: ExamType) {
+    const target = `${this.baseUrl}/${this.apiPrefix}/editExamTitle/${exam.examId!}`;
+    return await this.http.put<any>(target, {authorId: this.teacherId, title: exam.title }).toPromise();
+  }
 
   async postQuestion(examId: string, question: any): Promise<any> {
     const target = `${this.baseUrl}/${this.apiPrefix}/addQuestion/${examId}`;

@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {Confirmation} from '../confirmation/confirmation';
 import {Writer} from '../../../services/writer';
 import {TrashButton} from '../iconed/trash-button';
+import {TitleEdit} from '../../write/title-edit/title-edit';
 
 @Component({
   selector: 'app-exam',
@@ -14,11 +15,16 @@ import {TrashButton} from '../iconed/trash-button';
     CommonModule,
     Confirmation,
     TrashButton,
+    TitleEdit,
   ],
   template: `<div class="flex flex-col p-8 ">
     <div class="flex flex-row justify-between">
-      <h3 class="text-3xl font-bold">{{exam.title}}</h3>
-      <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
+      @if (this.exam.examId !== currentlyEditedTitleExamId) {
+        <h3 class="text-3xl font-bold" (dblclick)="handleDoubleClick()">{{exam.title}}</h3>
+        <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
+      } @else {
+        <app-title-edit [exam]="exam"  (discardCalled)="handleDiscardTitleEdit()" (submitSucceed)="handleNeedUpdate()"/>
+      }
     </div>
     <ul>
       @for (question of exam.questions; track question.questionId) {
@@ -35,7 +41,10 @@ export class Exam {
   }
 
   @Input() exam!: ExamType;
+  @Input() currentlyEditedTitleExamId: string|null = null;
   @Output() listNeedsUpdate = new EventEmitter<boolean>();
+  @Output() examTitleTriggerEdit = new EventEmitter<string>();
+  @Output() discardTitleEdit = new EventEmitter<boolean>();
 
   confirmMainVisible = false;
   addQuestionRoute() {
@@ -44,6 +53,15 @@ export class Exam {
 
   handleDeleteCall() {
     this.confirmMainVisible = true;
+  }
+
+  handleDoubleClick(): void {
+    console.log('clicked twice exam');
+    this.examTitleTriggerEdit.emit(this.exam.examId!);
+  }
+
+  handleDiscardTitleEdit(): void {
+    this.discardTitleEdit.emit(true);
   }
 
   handleNeedUpdate() {
