@@ -35,7 +35,6 @@ export class AnswerEdit implements OnChanges {
   @Input() questionId: string|null = null;
   @Input() examId: string|null = null;
   @Output() discardCalled = new EventEmitter<boolean>();
-  @Output() submitSucceed = new EventEmitter<boolean>();
 
   constructor(private writer: Writer, private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -56,11 +55,11 @@ export class AnswerEdit implements OnChanges {
     if (this.answer?.answerId) {
       answer.answerId = this.answer.answerId;
       this.writer.updateAnswer(this.examId!, this.questionId!, answer).then(response => {
-        this.submitSucceed.emit(true);
+        console.log('resp', response)
       })
     } else {
       this.writer.addAnswer(this.examId!, this.questionId!, answer).then(response => {
-        this.submitSucceed.emit(true)
+        console.log('resp', response)
       })
     }
   }

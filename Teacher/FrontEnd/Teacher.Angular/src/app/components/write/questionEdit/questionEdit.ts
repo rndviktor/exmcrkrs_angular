@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ContentEditorFormComponent} from './contentEditorForm';
 import {Writer} from '../../../services/writer';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -9,6 +9,8 @@ import {Confirmation} from '../../common/confirmation/confirmation';
 import {Answer} from '../../common/answer/answer';
 import {AnswerEdit} from '../answer-edit/answer-edit';
 import {TrashButton} from '../../common/iconed/trash-button';
+import {SseService} from '../../../services/sse-service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-question',
@@ -31,17 +33,16 @@ import {TrashButton} from '../../common/iconed/trash-button';
                   [examId]="examId!"
                   [disableDeletion]="addAnswerMode || (!!editedAnswerId && editedAnswerId !== ans.answerId)"
                   [questionId]="question?.questionId!"
-                  (questionNeedsUpdate)="answersListUpdated()"
                   (questionTriggerEdit)="handleAnswerDoubleClick($event)"/>
               } @else {
-                <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()" (submitSucceed)="answersListUpdated()"/>
+                <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()"/>
               }
             </li>
           }
         </ul>
       }
       @if (addAnswerMode) {
-        <app-answer-edit [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()" (submitSucceed)="answersListUpdated()"/>
+        <app-answer-edit [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()"/>
       } @else if (!editedAnswerId && !!questionId) {
         <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddAnswerPressed()">Add
           Answer
@@ -52,17 +53,21 @@ import {TrashButton} from '../../common/iconed/trash-button';
                       (confirmed)="handleConfirmation($event)"/>
   `,
 })
-export class QuestionEdit implements OnInit {
+export class QuestionEdit implements OnInit, OnDestroy {
   editMode: boolean = false;
   question: QuestionType | null = null;
   examId: string|null = null;
   questionId: string | null = null;
   addAnswerMode: boolean = false;
   editedAnswerId: string|null = null;
-
+  subscription?: Subscription;
   confirmVisible = false;
 
-  constructor(private writer: Writer, private reader: Reader, private route: ActivatedRoute, private router: Router) {
+  constructor(private writer: Writer, private reader: Reader, private route: ActivatedRoute, private router: Router, private sseService: SseService) {
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
   handleAddAnswerPressed() {
@@ -85,6 +90,20 @@ export class QuestionEdit implements OnInit {
         this.examId = params.get('examId');
         this.editMode = !!this.questionId;
         if (this.editMode) {
+          this.subscription = this.sseService
+            .observeMessagesToObject(this.questionId!)
+            .subscribe(
+              message => {
+                console.log("Q SSE message:", message);
+                if (message === 'QuestionRemovedEvent') {
+                  this.routeHome();
+                } else {
+                  this.answersListUpdated();
+                }
+              },
+              err => console.error('Q SSE error', err)
+            );
+          console.log('subscr', this.questionId)
           return this.reader.getQuestionById(this.questionId!);
         } else {
           return [];
@@ -134,7 +153,9 @@ export class QuestionEdit implements OnInit {
   handleContentSubmit(data: {content: string|null}) {
     const { content } = data;
     if (this.editMode) {
-      this.writer.updateQuestionContent(this.examId!, { questionId: this.question?.questionId, content: content });
+      this.writer.updateQuestionContent(this.examId!, { questionId: this.question?.questionId, content: content }).then(resp => {
+        console.log('resp=', resp);
+      });
     } else {
       this.writer.postQuestion(this.examId!, { content: content! }).then(response => {
         const { id } = response;

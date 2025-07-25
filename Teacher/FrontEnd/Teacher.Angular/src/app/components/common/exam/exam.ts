@@ -23,12 +23,12 @@ import {TitleEdit} from '../../write/title-edit/title-edit';
         <h3 class="text-3xl font-bold" (dblclick)="handleDoubleClick()">{{exam.title}}</h3>
         <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
       } @else {
-        <app-title-edit [exam]="exam"  (discardCalled)="handleDiscardTitleEdit()" (submitSucceed)="handleNeedUpdate()"/>
+        <app-title-edit [exam]="exam"  (discardCalled)="handleDiscardTitleEdit()" />
       }
     </div>
     <ul>
       @for (question of exam.questions; track question.questionId) {
-        <li><app-question [question]="question" [examId]="exam.examId" (examNeedsUpdate)="handleNeedUpdate()" /></li>
+        <li><app-question [question]="question" [examId]="exam.examId" /></li>
       }
     </ul>
     <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="addQuestionRoute()">Add Question</button>
@@ -42,7 +42,6 @@ export class Exam {
 
   @Input() exam!: ExamType;
   @Input() currentlyEditedTitleExamId: string|null = null;
-  @Output() listNeedsUpdate = new EventEmitter<boolean>();
   @Output() examTitleTriggerEdit = new EventEmitter<string>();
   @Output() discardTitleEdit = new EventEmitter<boolean>();
 
@@ -64,16 +63,11 @@ export class Exam {
     this.discardTitleEdit.emit(true);
   }
 
-  handleNeedUpdate() {
-    this.listNeedsUpdate.emit(true);
-  }
-
   handleConfirmation(confirmed: boolean) {
     this.confirmMainVisible = false;
     if (confirmed) {
       this.writer.deleteExam(this.exam.examId!).then(resp => {
         console.log('got exam deletion resp:', resp);
-        this.handleNeedUpdate();
       })
     } else {
       // Cancelled

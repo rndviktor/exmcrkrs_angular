@@ -29,7 +29,6 @@ export class Answer {
   @Input() questionId!: string;
   @Input() answer!: AnswerType;
   @Input() disableDeletion = false;
-  @Output() questionNeedsUpdate = new EventEmitter<boolean>();
   @Output() questionTriggerEdit = new EventEmitter<string>();
 
   confirmAnswerVisible = false;
@@ -50,7 +49,6 @@ export class Answer {
     if (confirmed) {
       this.writer.removeAnswer(this.examId!, this.questionId!, this.answer.answerId!).then(response => {
         console.log('got response', response);
-        this.questionNeedsUpdate.emit(true);
       })
     } else {
       // Cancelled

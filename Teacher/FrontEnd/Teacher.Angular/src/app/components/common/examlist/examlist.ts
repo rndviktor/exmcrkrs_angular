@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import {Subject, takeUntil} from 'rxjs';
+import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
+import {Subject, Subscription, takeUntil} from 'rxjs';
 import {ExamType, Reader} from '../../../services/reader';
 import {Exam} from '../exam/exam';
 import {TitleEdit} from '../../write/title-edit/title-edit';
+import {SseService} from '../../../services/sse-service';
 
 @Component({
   selector: 'app-examlist',
@@ -14,7 +15,6 @@ import {TitleEdit} from '../../write/title-edit/title-edit';
     <ul>
       @for (ex of exams; track ex.examId) {
         <app-exam [exam]="ex"
-                  (listNeedsUpdate)="handleListUpdate()"
                   (examTitleTriggerEdit)="handleExamTitleDoubleClick($event)"
                   [currentlyEditedTitleExamId]="editedExamId"
                   (discardTitleEdit)="handleDiscardTitleEdit()" />
@@ -23,7 +23,7 @@ import {TitleEdit} from '../../write/title-edit/title-edit';
     <div class="flex flex-col p-8">
       @if (addExamMode) {
         <div class="flex flex-row justify-between w-11/12">
-          <app-title-edit (discardCalled)="handleDiscardTitleEdit()" (submitSucceed)="handleListUpdate()"/>
+          <app-title-edit (discardCalled)="handleDiscardTitleEdit()" />
         </div>
       } @else if (!editedExamId) {
         <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddExamClick()">Add Exam</button>
@@ -31,14 +31,25 @@ import {TitleEdit} from '../../write/title-edit/title-edit';
     </div>
   `
 })
-export class Examlist {
+export class Examlist implements OnDestroy {
   private destroy$ = new Subject<void>();
   addExamMode: boolean = false;
   editedExamId: string|null = null;
+  private subscription?: Subscription;
 
   exams: ExamType[] = [];
-  constructor(private reader: Reader) {
+  constructor(private reader: Reader, private sseService: SseService, private cdr: ChangeDetectorRef) {
     this.handleListUpdate();
+
+    this.subscription = this.sseService
+      .observeMessagesToAuthor()
+      .subscribe(
+        message => {
+          console.log("sse message:", message);
+          this.handleListUpdate();
+        },
+        err => console.error('SSE error', err)
+      );
   }
 
   handleAddExamClick() {
@@ -58,14 +69,16 @@ export class Examlist {
     this.reader.getData()
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        console.log('received', data);
+        console.log('received', data.exams);
         this.exams = data.exams;
+        this.cdr.detectChanges();
       });
     this.addExamMode = false;
     this.editedExamId = null;
   }
 
   ngOnDestroy() {
+    this.subscription?.unsubscribe();
     this.destroy$.next();
     this.destroy$.complete();
   }

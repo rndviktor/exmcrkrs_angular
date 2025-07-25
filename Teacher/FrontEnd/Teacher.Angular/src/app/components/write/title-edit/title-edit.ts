@@ -28,7 +28,6 @@ export class TitleEdit implements OnChanges {
   form: FormGroup;
   @Input() exam: ExamType | null = null;
   @Output() discardCalled = new EventEmitter<boolean>();
-  @Output() submitSucceed = new EventEmitter<boolean>();
 
   constructor(private writer: Writer, private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -49,12 +48,10 @@ export class TitleEdit implements OnChanges {
       exam.examId = this.exam.examId;
       this.writer.updateExamTitle(exam).then(resp => {
         console.log('got response to update request', resp);
-        this.submitSucceed.emit(true);
       })
     } else {
       this.writer.createExam(exam).then(response => {
         console.log('got b/e resp:', response);
-        this.submitSucceed.emit(true);
       })
     }
   }

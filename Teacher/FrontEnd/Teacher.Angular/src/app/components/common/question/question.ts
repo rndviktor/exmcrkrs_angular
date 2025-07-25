@@ -26,7 +26,7 @@ import {TrashButton} from '../iconed/trash-button';
       </div>
       <ul>
         @for (ans of question.answers; track ans.answerId) {
-          <li><app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!" (questionNeedsUpdate)="handleNeedUpdate()"/></li>
+          <li><app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!"/></li>
         }
       </ul>
     </div>
@@ -53,8 +53,6 @@ export class Question implements AfterViewInit {
 
   @Input() examId: string | null = null;
 
-  @Output() examNeedsUpdate = new EventEmitter<boolean>();
-
   confirmQuestionVisible = false;
 
   constructor(private router: Router, private writer: Writer) {
@@ -64,16 +62,11 @@ export class Question implements AfterViewInit {
     this.confirmQuestionVisible = true;
   }
 
-  handleNeedUpdate() {
-    this.examNeedsUpdate.emit(true);
-  }
-
   handleConfirmation(confirmed: boolean) {
     this.confirmQuestionVisible = false;
     if (confirmed) {
       this.writer.removeQuestion(this.examId!, this.question.questionId!).then(response => {
         console.log('got question deletion resp:', response);
-        this.handleNeedUpdate();
       })
     } else {
       // Cancelled
