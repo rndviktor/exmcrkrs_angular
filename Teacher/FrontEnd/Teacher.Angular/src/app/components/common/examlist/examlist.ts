@@ -4,14 +4,18 @@ import {ExamType, Reader} from '../../../services/reader';
 import {Exam} from '../exam/exam';
 import {TitleEdit} from '../../write/title-edit/title-edit';
 import {SseService} from '../../../services/sse-service';
+import {ApiStatus} from '../api-status/api-status';
 
 @Component({
   selector: 'app-examlist',
   imports: [
     Exam,
-    TitleEdit
+    TitleEdit,
+    ApiStatus
   ],
   template: `
+    <app-api-status />
+    <br/>
     <ul>
       @for (ex of exams; track ex.examId) {
         <app-exam [exam]="ex"

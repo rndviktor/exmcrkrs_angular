@@ -11,11 +11,14 @@ import {AnswerEdit} from '../answer-edit/answer-edit';
 import {TrashButton} from '../../common/iconed/trash-button';
 import {SseService} from '../../../services/sse-service';
 import {Subscription} from 'rxjs';
+import {ApiStatus} from '../../common/api-status/api-status';
 
 @Component({
   selector: 'app-question',
-  imports: [ContentEditorFormComponent, HomeButton, Confirmation, Answer, AnswerEdit, TrashButton],
+  imports: [ContentEditorFormComponent, HomeButton, Confirmation, Answer, AnswerEdit, TrashButton, ApiStatus],
   template: `
+    <app-api-status />
+    <br/>
     <div class="flex flex-col p-8 ">
       <div class="flex flex-row justify-between">
         <app-home-button (click)="routeHome()"/>
