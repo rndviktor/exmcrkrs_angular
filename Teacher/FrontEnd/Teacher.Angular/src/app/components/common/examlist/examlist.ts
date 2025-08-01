@@ -14,25 +14,27 @@ import {ApiStatus} from '../api-status/api-status';
     ApiStatus
   ],
   template: `
-    <app-api-status />
+    <app-api-status (backendAvailable)="handleBackendAvailable($event)"/>
     <br/>
-    <ul>
-      @for (ex of exams; track ex.examId) {
-        <app-exam [exam]="ex"
-                  (examTitleTriggerEdit)="handleExamTitleDoubleClick($event)"
-                  [currentlyEditedTitleExamId]="editedExamId"
-                  (discardTitleEdit)="handleDiscardTitleEdit()" />
-      }
-    </ul>
-    <div class="flex flex-col p-8">
-      @if (addExamMode) {
-        <div class="flex flex-row justify-between w-11/12">
-          <app-title-edit (discardCalled)="handleDiscardTitleEdit()" />
-        </div>
-      } @else if (!editedExamId) {
-        <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddExamClick()">Add Exam</button>
-      }
-    </div>
+    @if (backendAvailable) {
+      <ul>
+        @for (ex of exams; track ex.examId) {
+          <app-exam [exam]="ex"
+                    (examTitleTriggerEdit)="handleExamTitleDoubleClick($event)"
+                    [currentlyEditedTitleExamId]="editedExamId"
+                    (discardTitleEdit)="handleDiscardTitleEdit()" />
+        }
+      </ul>
+      <div class="flex flex-col p-8">
+        @if (addExamMode) {
+          <div class="flex flex-row justify-between w-11/12">
+            <app-title-edit (discardCalled)="handleDiscardTitleEdit()" />
+          </div>
+        } @else if (!editedExamId) {
+          <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddExamClick()">Add Exam</button>
+        }
+      </div>
+    }
   `
 })
 export class Examlist implements OnDestroy {
@@ -40,6 +42,7 @@ export class Examlist implements OnDestroy {
   addExamMode: boolean = false;
   editedExamId: string|null = null;
   private subscription?: Subscription;
+  backendAvailable: boolean = false;
 
   exams: ExamType[] = [];
   constructor(private reader: Reader, private sseService: SseService, private cdr: ChangeDetectorRef) {
@@ -54,6 +57,13 @@ export class Examlist implements OnDestroy {
         },
         err => console.error('SSE error', err)
       );
+  }
+
+  handleBackendAvailable(available: boolean) {
+    if (!this.backendAvailable && available) {
+      this.handleListUpdate()
+    }
+    this.backendAvailable = available;
   }
 
   handleAddExamClick() {

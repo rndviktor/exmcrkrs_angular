@@ -17,7 +17,7 @@ import {ApiStatus} from '../../common/api-status/api-status';
   selector: 'app-question',
   imports: [ContentEditorFormComponent, HomeButton, Confirmation, Answer, AnswerEdit, TrashButton, ApiStatus],
   template: `
-    <app-api-status />
+    <app-api-status (backendAvailable)="handleBackendAvailable($event)"/>
     <br/>
     <div class="flex flex-col p-8 ">
       <div class="flex flex-row justify-between">
@@ -65,12 +65,20 @@ export class QuestionEdit implements OnInit, OnDestroy {
   editedAnswerId: string|null = null;
   subscription?: Subscription;
   confirmVisible = false;
+  backendAvailable: boolean = false;
 
   constructor(private writer: Writer, private reader: Reader, private route: ActivatedRoute, private router: Router, private sseService: SseService) {
   }
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+  }
+
+  handleBackendAvailable(available: boolean) {
+    if (this.backendAvailable && !available) {
+      this.routeHome();
+    }
+    this.backendAvailable = available;
   }
 
   handleAddAnswerPressed() {
