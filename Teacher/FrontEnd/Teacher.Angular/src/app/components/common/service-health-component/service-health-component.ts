@@ -70,9 +70,9 @@ export class ServiceHealthComponent implements OnInit, OnDestroy {
       this.pingInterval = setInterval(() => this.ping(), this.pingDefault);
       console.log('online', this.serviceUrl, this.pingDefault);
 
-      if (this.timer > 0) {
-        clearInterval(this.countdownInterval);
-        this.timer = 0
+      clearInterval(this.countdownInterval);
+      this.timer = 0
+      if (this.alarmMessage) {
         this.alarmMessage = `Connection restored`;
         setTimeout(() => this.alarmMessage = null, 5000)
       }
