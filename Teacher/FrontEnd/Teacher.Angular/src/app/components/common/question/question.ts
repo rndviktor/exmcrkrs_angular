@@ -20,7 +20,7 @@ import {TrashButton} from '../iconed/trash-button';
   template: `
     <div class="p-4 bg-indigo-100">
       <div class="grid grid-cols-12 gap-4">
-        <div #contentDiv class="whitespace-pre-wrap col-span-10 outline bg-white" [style.height.px]="dynamicHeight">{{question.content}}</div>
+        <div class="whitespace-pre-line col-span-10 bg-white">{{question.content}}</div>
         <app-pencil-button class="col-span-1" (click)="editQuestionRoute()"/>
         <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
       </div>
@@ -33,23 +33,8 @@ import {TrashButton} from '../iconed/trash-button';
     <app-confirmation [visible]="confirmQuestionVisible" [message]="'Do you really want to delete this question?'" (confirmed)="handleConfirmation($event)" />
   `,
 })
-export class Question implements AfterViewInit {
-  @ViewChild('contentDiv') contentDiv!: ElementRef<HTMLDivElement>;
+export class Question {
   @Input() question!: QuestionType;
-
-  dynamicHeight = 0;
-
-  ngAfterViewInit() {
-    this.updateHeight();
-  }
-
-  updateHeight() {
-    if (this.contentDiv) {
-      setTimeout(() => {
-        this.dynamicHeight = this.contentDiv.nativeElement.scrollHeight;
-      }, 0);
-    }
-  }
 
   @Input() examId: string | null = null;
 

@@ -15,7 +15,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
   template: `<div class="flex flex-col p-8 ">
     <form class="flex flex-col" [formGroup]="form" (ngSubmit)="onSubmit()" >
       <label for="content">Content:</label>
-      <textarea #contentDiv (input)="autoResize($event)" id="content" type="text" formControlName="content" [style.height.px]="dynamicHeight"></textarea>
+      <textarea class="whitespace-pre-line col-span-10 bg-white outline-gray-400 outline-2" #contentDiv (input)="autoResize($event)" id="content" type="text" formControlName="content" [style.height.px]="dynamicHeight"></textarea>
       <button type="submit" [disabled]="form.pristine || form.invalid" class="bg-indigo-200 hover:bg-indigo-400 disabled:bg-indigo-50 flex-none shadow-xl" >{{this.isEditMode ? 'Update' : 'Create'}}</button>
     </form>
   </div>`,
