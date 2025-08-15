@@ -28,7 +28,7 @@ import {TitleEdit} from '../../write/title-edit/title-edit';
     </div>
     <ul>
       @for (question of exam.questions; track question.questionId) {
-        <li><app-question [question]="question" [examId]="exam.examId" /></li>
+        <li><app-question [question]="question" [examId]="exam.examId" (deleted)="onDeleted()" /></li>
       }
     </ul>
     <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="addQuestionRoute()">Add Question</button>
@@ -44,10 +44,15 @@ export class Exam {
   @Input() currentlyEditedTitleExamId: string|null = null;
   @Output() examTitleTriggerEdit = new EventEmitter<string>();
   @Output() discardTitleEdit = new EventEmitter<boolean>();
+  @Output() deleted = new EventEmitter<boolean>();
 
   confirmMainVisible = false;
   addQuestionRoute() {
     this.router.navigate(['exam', this.exam.examId, 'addQuestion']);
+  }
+
+  onDeleted() {
+    this.deleted.emit(true);
   }
 
   handleDeleteCall() {
@@ -63,12 +68,11 @@ export class Exam {
     this.discardTitleEdit.emit(true);
   }
 
-  handleConfirmation(confirmed: boolean) {
+  async handleConfirmation(confirmed: boolean) {
     this.confirmMainVisible = false;
     if (confirmed) {
-      this.writer.deleteExam(this.exam.examId!).then(resp => {
-        console.log('got exam deletion resp:', resp);
-      })
+      await this.writer.deleteExam(this.exam.examId!);
+      this.onDeleted();
     } else {
       // Cancelled
       console.log('Delete exam cancelled');

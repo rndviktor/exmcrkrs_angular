@@ -19,6 +19,7 @@ import {TrashButton} from '../iconed/trash-button';
   ],
   template: `
     <div class="p-4 bg-indigo-100">
+      <div class="w-full text-gray-400 text-sm">{{question.questionId}}</div>
       <div class="grid grid-cols-12 gap-4">
         <div class="whitespace-pre-line col-span-10 bg-white">{{question.content}}</div>
         <app-pencil-button class="col-span-1" (click)="editQuestionRoute()"/>
@@ -26,7 +27,7 @@ import {TrashButton} from '../iconed/trash-button';
       </div>
       <ul>
         @for (ans of question.answers; track ans.answerId) {
-          <li><app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!"/></li>
+          <li><app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!" (deleted)="onDeleted()"/></li>
         }
       </ul>
     </div>
@@ -35,8 +36,12 @@ import {TrashButton} from '../iconed/trash-button';
 })
 export class Question {
   @Input() question!: QuestionType;
-
   @Input() examId: string | null = null;
+  @Output() deleted = new EventEmitter<boolean>();
+
+  onDeleted() {
+    this.deleted.emit(true);
+  }
 
   confirmQuestionVisible = false;
 
@@ -47,12 +52,11 @@ export class Question {
     this.confirmQuestionVisible = true;
   }
 
-  handleConfirmation(confirmed: boolean) {
+  async handleConfirmation(confirmed: boolean) {
     this.confirmQuestionVisible = false;
     if (confirmed) {
-      this.writer.removeQuestion(this.examId!, this.question.questionId!).then(response => {
-        console.log('got question deletion resp:', response);
-      })
+      await this.writer.removeQuestion(this.examId!, this.question.questionId!);
+      this.onDeleted();
     } else {
       // Cancelled
       console.log('Delete question cancelled');

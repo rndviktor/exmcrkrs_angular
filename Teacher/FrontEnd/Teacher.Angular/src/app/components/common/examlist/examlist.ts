@@ -22,7 +22,9 @@ import {ApiStatus} from '../api-status/api-status';
           <app-exam [exam]="ex"
                     (examTitleTriggerEdit)="handleExamTitleDoubleClick($event)"
                     [currentlyEditedTitleExamId]="editedExamId"
-                    (discardTitleEdit)="handleDiscardTitleEdit()" />
+                    (discardTitleEdit)="handleDiscardTitleEdit()"
+                    (deleted)="deletionHandler()"
+          />
         }
       </ul>
       <div class="flex flex-col p-8">
@@ -79,12 +81,16 @@ export class Examlist implements OnDestroy {
     this.editedExamId = examId;
   }
 
+  deletionHandler() {
+    this.handleListUpdate();
+  }
+
   handleListUpdate() {
     this.reader.getData()
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
-        console.log('received', data.exams);
-        this.exams = data.exams;
+        console.log('received', data?.exams);
+        this.exams = data?.exams ? data.exams : null;
         this.cdr.detectChanges();
       });
     this.addExamMode = false;

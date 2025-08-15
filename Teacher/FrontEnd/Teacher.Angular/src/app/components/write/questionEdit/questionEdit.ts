@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ContentEditorFormComponent} from './contentEditorForm';
 import {Writer} from '../../../services/writer';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -67,7 +67,7 @@ export class QuestionEdit implements OnInit, OnDestroy {
   confirmVisible = false;
   backendAvailable: boolean = false;
 
-  constructor(private writer: Writer, private reader: Reader, private route: ActivatedRoute, private router: Router, private sseService: SseService) {
+  constructor(private writer: Writer, private reader: Reader, private route: ActivatedRoute, private router: Router, private sseService: SseService, private cdr: ChangeDetectorRef) {
   }
 
   ngOnDestroy(): void {
@@ -83,15 +83,18 @@ export class QuestionEdit implements OnInit, OnDestroy {
 
   handleAddAnswerPressed() {
     this.addAnswerMode = true;
+    this.cdr.detectChanges();
   }
 
   handleAnswerDoubleClick(data: any) {
     this.editedAnswerId = data;
+    this.cdr.detectChanges();
   }
 
   handleDiscardCalled() {
     this.addAnswerMode = false;
     this.editedAnswerId = null;
+    setTimeout(() => this.cdr.detectChanges(), 50);
   }
 
   ngOnInit(): void {
@@ -101,6 +104,7 @@ export class QuestionEdit implements OnInit, OnDestroy {
         this.examId = params.get('examId');
         this.editMode = !!this.questionId;
         if (this.editMode) {
+          this.subscription?.unsubscribe();
           this.subscription = this.sseService
             .observeMessagesToObject(this.questionId!)
             .subscribe(
@@ -150,6 +154,7 @@ export class QuestionEdit implements OnInit, OnDestroy {
 
   showConfirm(visible: boolean) {
     this.confirmVisible = visible;
+    this.cdr.detectChanges();
   }
 
   handleConfirmation(confirmed: boolean) {
@@ -161,14 +166,12 @@ export class QuestionEdit implements OnInit, OnDestroy {
     }
   }
 
-  handleContentSubmit(data: {content: string|null}) {
+  async handleContentSubmit(data: {content: string|null}) {
     const { content } = data;
     if (this.editMode) {
-      this.writer.updateQuestionContent(this.examId!, { questionId: this.question?.questionId, content: content }).then(resp => {
-        console.log('resp=', resp);
-      });
+      await this.writer.updateQuestionContent(this.examId!, { questionId: this.question?.questionId, content: content })
     } else {
-      this.writer.postQuestion(this.examId!, { content: content! }).then(response => {
+      await this.writer.postQuestion(this.examId!, { content: content! }).then(response => {
         const { id } = response;
         this.router.navigate(['exam', this.examId, 'editQuestion', id]);
       });

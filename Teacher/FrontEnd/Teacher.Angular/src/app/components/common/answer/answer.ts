@@ -30,6 +30,7 @@ export class Answer {
   @Input() answer!: AnswerType;
   @Input() disableDeletion = false;
   @Output() questionTriggerEdit = new EventEmitter<string>();
+  @Output() deleted = new EventEmitter<boolean>();
 
   confirmAnswerVisible = false;
 
@@ -44,12 +45,11 @@ export class Answer {
     this.questionTriggerEdit.emit(this.answer.answerId!);
   }
 
-  handleConfirmation(confirmed: boolean) {
+  async handleConfirmation(confirmed: boolean) {
     this.confirmAnswerVisible = false;
     if (confirmed) {
-      this.writer.removeAnswer(this.examId!, this.questionId!, this.answer.answerId!).then(response => {
-        console.log('got response', response);
-      })
+      await this.writer.removeAnswer(this.examId!, this.questionId!, this.answer.answerId!);
+      this.deleted.emit(true);
     } else {
       // Cancelled
       console.log('Delete cancelled');
