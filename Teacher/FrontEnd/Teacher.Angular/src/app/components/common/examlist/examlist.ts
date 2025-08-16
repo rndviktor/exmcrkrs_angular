@@ -14,7 +14,7 @@ import {ApiStatus} from '../api-status/api-status';
     ApiStatus
   ],
   template: `
-    <app-api-status (backendAvailable)="handleBackendAvailable($event)"/>
+    <app-api-status (backendAvailable)="handleBackendAvailable($event)" (publishAvailable)="handlePubslishAvailable($event)"/>
     <br/>
     @if (backendAvailable) {
       <ul>
@@ -22,6 +22,7 @@ import {ApiStatus} from '../api-status/api-status';
           <app-exam [exam]="ex"
                     (examTitleTriggerEdit)="handleExamTitleDoubleClick($event)"
                     [currentlyEditedTitleExamId]="editedExamId"
+                    [publishAvailable]="publishAvailable"
                     (discardTitleEdit)="handleDiscardTitleEdit()"
                     (deleted)="deletionHandler()"
           />
@@ -45,6 +46,7 @@ export class Examlist implements OnDestroy {
   editedExamId: string|null = null;
   private subscription?: Subscription;
   backendAvailable: boolean = false;
+  publishAvailable: boolean = false;
 
   exams: ExamType[] = [];
   constructor(private reader: Reader, private sseService: SseService, private cdr: ChangeDetectorRef) {
@@ -53,8 +55,7 @@ export class Examlist implements OnDestroy {
     this.subscription = this.sseService
       .observeMessagesToAuthor()
       .subscribe(
-        message => {
-          console.log("sse message:", message);
+        () => {
           this.handleListUpdate();
         },
         err => console.error('SSE error', err)
@@ -66,6 +67,10 @@ export class Examlist implements OnDestroy {
       this.handleListUpdate()
     }
     this.backendAvailable = available;
+  }
+
+  handlePubslishAvailable(available: boolean) {
+    this.publishAvailable = available;
   }
 
   handleAddExamClick() {
