@@ -4,6 +4,8 @@
   "extends": "./tsconfig.json",
   "compileOnSave": false,
   "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": false,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -19,9 +21,8 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "noEmit": false,
-    "target": "es2020",
-    "module": "es2020",
-    "lib": ["es2020", "dom"],
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"],
     "skipLibCheck": true
   },
   "angularCompilerOptions": {
