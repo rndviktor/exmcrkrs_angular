@@ -31,12 +31,12 @@ import {Subscription} from 'rxjs';
             @if (publishAvailable) {
               <div class="flex flex-row justify-between bg-indigo-200">
                 @if (!publishingVersion) {
-                  <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl m-2"
+                  <button id="publishExam" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl m-2"
                           (click)="handlePublishClick()"> Publish exam [{{ exam.examId }} v{{ exam.version }}] to
                     students
                   </button>
                 } @else {
-                  <div class="bg-gray-800 m-2 w-5/6 p-1" [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']" >
+                  <div id="publishingMessaging" class="bg-gray-800 m-2 w-5/6 p-1" [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']" >
                     {{ publishingMessage }}
                   </div>
                 }
@@ -54,7 +54,7 @@ import {Subscription} from 'rxjs';
           </li>
         }
       </ul>
-      <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="addQuestionRoute()">Add Question
+      <button id="addQuestionButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="addQuestionRoute()">Add Question
       </button>
     </div>
     <app-confirmation [visible]="confirmMainVisible" [message]="'Do you really want to delete this exam!'"

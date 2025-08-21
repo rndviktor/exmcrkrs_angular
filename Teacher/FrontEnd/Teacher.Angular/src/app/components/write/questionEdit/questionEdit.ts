@@ -47,7 +47,7 @@ import {ApiStatus} from '../../common/api-status/api-status';
       @if (addAnswerMode) {
         <app-answer-edit [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()"/>
       } @else if (!editedAnswerId && !!questionId) {
-        <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddAnswerPressed()">Add
+        <button id="addAnswerButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddAnswerPressed()">Add
           Answer
         </button>
       }

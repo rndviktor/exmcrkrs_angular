@@ -34,7 +34,7 @@ import {ApiStatus} from '../api-status/api-status';
             <app-title-edit (discardCalled)="handleDiscardTitleEdit()" />
           </div>
         } @else if (!editedExamId) {
-          <button class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddExamClick()">Add Exam</button>
+          <button id="addExamButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddExamClick()">Add Exam</button>
         }
       </div>
     }
