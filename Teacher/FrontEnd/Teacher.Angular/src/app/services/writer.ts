@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {AnswerType, ExamType, QuestionType} from './reader';
+
+import {AnswerType, ExamType, QuestionType} from "../types";
 
 @Injectable({
   providedIn: 'root'

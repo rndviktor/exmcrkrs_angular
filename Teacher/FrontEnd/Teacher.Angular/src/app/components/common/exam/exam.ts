@@ -1,6 +1,5 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ExamType} from '../../../services/reader';
 import {Question} from '../question/question';
 import {Router} from '@angular/router';
 import {Confirmation} from '../confirmation/confirmation';
@@ -9,6 +8,7 @@ import {TrashButton} from '../iconed/trash-button';
 import {TitleEdit} from '../../write/title-edit/title-edit';
 import {Publisher} from '../../../services/publisher';
 import {Subscription} from 'rxjs';
+import {ExamType} from "../../../types";
 
 @Component({
   selector: 'app-exam',

@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {AnswerType} from '../../../services/reader';
 import {Writer} from '../../../services/writer';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CheckIconComponent} from '../../common/iconed/check-button';
 import {XButton} from '../../common/iconed/x-button';
+import {AnswerType} from "../../../types";
 
 @Component({
   selector: 'app-answer-edit',

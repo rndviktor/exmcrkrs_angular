@@ -1,25 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-
-export interface AnswerType {
-  answerId: string | null;
-  content: string;
-  isCorrect: boolean;
-}
-
-export interface QuestionType {
-  questionId: string | null | undefined;
-  content: string | null;
-  answers?: AnswerType[];
-}
-export interface ExamType {
-  examId: string | null;
-  version: number | null | undefined;
-  title: string;
-  questions: QuestionType[];
-}
 
 @Injectable({
   providedIn: 'root'

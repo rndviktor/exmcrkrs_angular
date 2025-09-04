@@ -3,7 +3,7 @@ import {ContentEditorFormComponent} from './contentEditorForm';
 import {Writer} from '../../../services/writer';
 import {ActivatedRoute, Router} from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import {QuestionType, Reader} from '../../../services/reader';
+import {Reader} from '../../../services/reader';
 import {HomeButton} from '../../common/iconed/home-button';
 import {Confirmation} from '../../common/confirmation/confirmation';
 import {Answer} from '../../common/answer/answer';
@@ -12,6 +12,7 @@ import {TrashButton} from '../../common/iconed/trash-button';
 import {SseService} from '../../../services/sse-service';
 import {Subscription} from 'rxjs';
 import {ApiStatus} from '../../common/api-status/api-status';
+import {QuestionType} from "../../../types";
 
 @Component({
   selector: 'app-question',

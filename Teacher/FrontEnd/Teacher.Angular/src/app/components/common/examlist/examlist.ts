@@ -1,10 +1,11 @@
 import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
 import {Subject, Subscription, takeUntil} from 'rxjs';
-import {ExamType, Reader} from '../../../services/reader';
+import {Reader} from '../../../services/reader';
 import {Exam} from '../exam/exam';
 import {TitleEdit} from '../../write/title-edit/title-edit';
 import {SseService} from '../../../services/sse-service';
 import {ApiStatus} from '../api-status/api-status';
+import {ExamType} from '../../../types';
 
 @Component({
   selector: 'app-examlist',

@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {QuestionType} from '../../../services/reader';
 import {CommonModule} from '@angular/common';
 import {Answer} from '../answer/answer';
 import {PencilButton} from '../iconed/pencil-button';
@@ -7,6 +6,7 @@ import {Router} from '@angular/router';
 import {Confirmation} from '../confirmation/confirmation';
 import {Writer} from '../../../services/writer';
 import {TrashButton} from '../iconed/trash-button';
+import {QuestionType} from "../../../types";
 
 @Component({
   selector: 'app-question',

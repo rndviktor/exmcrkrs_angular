@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {ExamType} from '../../../services/reader';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Writer} from '../../../services/writer';
 import {CheckIconComponent} from '../../common/iconed/check-button';
 import {XButton} from '../../common/iconed/x-button';
+import {ExamType} from "../../../types";
 
 @Component({
   selector: 'app-title-edit',

@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import { AnswerType } from 'src/app/services/reader';
 import {Confirmation} from '../confirmation/confirmation';
 import {Writer} from '../../../services/writer';
 import {CheckboxComponent} from '../iconed/checkbox';
 import {TrashButton} from '../iconed/trash-button';
+import {AnswerType} from "../../../types";
 
 @Component({
   selector: 'app-answer',
