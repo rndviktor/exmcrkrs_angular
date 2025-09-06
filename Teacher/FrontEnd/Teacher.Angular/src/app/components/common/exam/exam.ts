@@ -1,4 +1,13 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Question} from '../question/question';
 import {Router} from '@angular/router';
@@ -9,6 +18,7 @@ import {TitleEdit} from '../../write/title-edit/title-edit';
 import {Publisher} from '../../../services/publisher';
 import {Subscription} from 'rxjs';
 import {ExamType} from "../../../types";
+import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-exam',
@@ -36,7 +46,8 @@ import {ExamType} from "../../../types";
                     students
                   </button>
                 } @else {
-                  <div id="publishingMessaging" class="bg-gray-800 m-2 w-5/6 p-1" [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']" >
+                  <div id="publishingMessaging" class="bg-gray-800 m-2 w-5/6 p-1"
+                       [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']">
                     {{ publishingMessage }}
                   </div>
                 }
@@ -54,7 +65,8 @@ import {ExamType} from "../../../types";
           </li>
         }
       </ul>
-      <button id="addQuestionButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="addQuestionRoute()">Add Question
+      <button id="addQuestionButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
+              (click)="addQuestionRoute()">Add Question
       </button>
     </div>
     <app-confirmation [visible]="confirmMainVisible" [message]="'Do you really want to delete this exam!'"
@@ -64,27 +76,27 @@ import {ExamType} from "../../../types";
 export class Exam implements OnDestroy, OnChanges {
   private subscription?: Subscription;
 
-  constructor(private router: Router, private writer: Writer, private publisher: Publisher, private cdr: ChangeDetectorRef) {
+  constructor(private examService: ExamService, private router: Router, private writer: Writer, private publisher: Publisher, private cdr: ChangeDetectorRef) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-     if (changes['exam'] && this.exam && this.publishingVersion) {
-       if (this.publishingVersion !== changes['exam'].currentValue.version) {
-         this.publishingVersion = null;
-         this.cdr.detectChanges();
-       }
-     }
+    if (changes['exam'] && this.exam && this.publishingVersion) {
+      if (this.publishingVersion !== changes['exam'].currentValue.version) {
+        this.publishingVersion = null;
+        this.cdr.detectChanges();
+      }
+    }
   }
 
   @Input() exam!: ExamType;
-  @Input() currentlyEditedTitleExamId: string|null = null;
+  @Input() currentlyEditedTitleExamId: string | null = null;
   @Input() publishAvailable: boolean = false;
   @Output() examTitleTriggerEdit = new EventEmitter<string>();
   @Output() discardTitleEdit = new EventEmitter<boolean>();
   @Output() deleted = new EventEmitter<boolean>();
 
   confirmMainVisible: boolean = false;
-  publishingVersion: number|null = null;
+  publishingVersion: number | null = null;
   isPublishError: boolean = false;
   publishingMessage: string = ""
 
@@ -130,6 +142,7 @@ export class Exam implements OnDestroy, OnChanges {
     this.confirmMainVisible = false;
     if (confirmed) {
       await this.writer.deleteExam(this.exam.examId!);
+      this.examService.deleteExam(this.exam.examId!);
       this.onDeleted();
     } else {
       // Cancelled

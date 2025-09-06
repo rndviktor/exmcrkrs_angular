@@ -4,6 +4,7 @@ import {Writer} from '../../../services/writer';
 import {CheckboxComponent} from '../iconed/checkbox';
 import {TrashButton} from '../iconed/trash-button';
 import {AnswerType} from "../../../types";
+import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-answer',
@@ -14,14 +15,15 @@ import {AnswerType} from "../../../types";
   ],
   template: `
     <div class="flex flex-row justify-between w-11/12">
-        <div class="flex flex-row justify-between items-center w-11/12" (dblclick)="handleDoubleClick()" >
-          <div class="px-3">{{answer.content}}</div>
-          <app-checkbox [id]="answer.answerId" [disabled]="true"  [checked]="answer.isCorrect"/>
-        </div>
+      <div class="flex flex-row justify-between items-center w-11/12" (dblclick)="handleDoubleClick()">
+        <div class="px-3">{{ answer.content }}</div>
+        <app-checkbox [id]="answer.answerId" [disabled]="true" [checked]="answer.isCorrect"/>
+      </div>
       <app-trash-button [disabled]="disableDeletion" class="col-span-1" (click)="handleDeleteCall($event)"/>
     </div>
 
-    <app-confirmation [visible]="confirmAnswerVisible" [message]="'Do you really want to delete this answer?'" (confirmed)="handleConfirmation($event)" />
+    <app-confirmation [visible]="confirmAnswerVisible" [message]="'Do you really want to delete this answer?'"
+                      (confirmed)="handleConfirmation($event)"/>
   `
 })
 export class Answer {
@@ -34,8 +36,9 @@ export class Answer {
 
   confirmAnswerVisible = false;
 
-  constructor(private writer: Writer) {
+  constructor(private writer: Writer, private examService: ExamService) {
   }
+
   handleDeleteCall(data: any) {
     this.confirmAnswerVisible = true;
   }
@@ -49,6 +52,7 @@ export class Answer {
     this.confirmAnswerVisible = false;
     if (confirmed) {
       await this.writer.removeAnswer(this.examId!, this.questionId!, this.answer.answerId!);
+      this.examService.deleteAnswerWithinQuestion(this.examId!, this.questionId!, this.answer.answerId!)
       this.deleted.emit(true);
     } else {
       // Cancelled

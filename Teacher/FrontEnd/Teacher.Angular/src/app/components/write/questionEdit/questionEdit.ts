@@ -1,18 +1,16 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, Signal} from '@angular/core';
 import {ContentEditorFormComponent} from './contentEditorForm';
 import {Writer} from '../../../services/writer';
 import {ActivatedRoute, Router} from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import {Reader} from '../../../services/reader';
 import {HomeButton} from '../../common/iconed/home-button';
 import {Confirmation} from '../../common/confirmation/confirmation';
 import {Answer} from '../../common/answer/answer';
 import {AnswerEdit} from '../answer-edit/answer-edit';
 import {TrashButton} from '../../common/iconed/trash-button';
-import {SseService} from '../../../services/sse-service';
 import {Subscription} from 'rxjs';
 import {ApiStatus} from '../../common/api-status/api-status';
 import {QuestionType} from "../../../types";
+import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-question',
@@ -25,21 +23,22 @@ import {QuestionType} from "../../../types";
         <app-home-button (click)="routeHome()"/>
         <app-trash-button (click)="showConfirm(true)"/>
       </div>
-      <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="question?.content"
+      <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="content"
                                [isEditMode]="editMode"/>
-      @if (question?.answers?.length) {
+      @if (answers?.length) {
         <ul>
-          @for (ans of question?.answers; track ans.answerId) {
+          @for (ans of answers; track ans.answerId) {
             <li>
               @if (editedAnswerId !== ans.answerId) {
                 <app-answer
                   [answer]="ans"
                   [examId]="examId!"
                   [disableDeletion]="addAnswerMode || (!!editedAnswerId && editedAnswerId !== ans.answerId)"
-                  [questionId]="question?.questionId!"
+                  [questionId]="questionId!"
                   (questionTriggerEdit)="handleAnswerDoubleClick($event)"/>
               } @else {
-                <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()"/>
+                <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!"
+                                 (discardCalled)="handleDiscardCalled()"/>
               }
             </li>
           }
@@ -48,7 +47,8 @@ import {QuestionType} from "../../../types";
       @if (addAnswerMode) {
         <app-answer-edit [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()"/>
       } @else if (!editedAnswerId && !!questionId) {
-        <button id="addAnswerButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddAnswerPressed()">Add
+        <button id="addAnswerButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
+                (click)="handleAddAnswerPressed()">Add
           Answer
         </button>
       }
@@ -59,16 +59,28 @@ import {QuestionType} from "../../../types";
 })
 export class QuestionEdit implements OnInit, OnDestroy {
   editMode: boolean = false;
-  question: QuestionType | null = null;
-  examId: string|null = null;
+  question$: Signal<QuestionType | undefined> | null = null;
+  examId: string | null = null;
   questionId: string | null = null;
   addAnswerMode: boolean = false;
-  editedAnswerId: string|null = null;
+  editedAnswerId: string | null = null;
   subscription?: Subscription;
   confirmVisible = false;
   backendAvailable: boolean = false;
 
-  constructor(private writer: Writer, private reader: Reader, private route: ActivatedRoute, private router: Router, private sseService: SseService, private cdr: ChangeDetectorRef) {
+  get question() {
+    return this.question$;
+  }
+
+  get answers() {
+    return this.question$ != null ? this.question$()?.answers : null;
+  }
+
+  get content() {
+    return this.question$ != null ? this.question$()?.content : null;
+  }
+
+  constructor(private examService: ExamService, private writer: Writer, private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef) {
   }
 
   ngOnDestroy(): void {
@@ -99,54 +111,15 @@ export class QuestionEdit implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        this.questionId = params.get('questionId');
-        this.examId = params.get('examId');
-        this.editMode = !!this.questionId;
-        if (this.editMode) {
-          this.subscription?.unsubscribe();
-          this.subscription = this.sseService
-            .observeMessagesToObject(this.questionId!)
-            .subscribe(
-              message => {
-                console.log("Q SSE message:", message);
-                if (message === 'QuestionRemovedEvent') {
-                  this.routeHome();
-                } else {
-                  this.answersListUpdated();
-                }
-              },
-              err => console.error('Q SSE error', err)
-            );
-          console.log('subscr', this.questionId)
-          return this.reader.getQuestionById(this.questionId!);
-        } else {
-          return [];
-        }
-      })
-    ).subscribe({
-      next: (item: any) => {
-        if (this.editMode && item) {
-          this.question = item.question;
-        }
-      }
-    });
-  }
-
-  refreshData(): void {
-    this.reader.getQuestionById(this.questionId!).subscribe({
-      next: (item: any) => {
-        if (this.editMode && item) {
-          this.question = item.question;
-        }
+    this.examService.loadExams();
+    this.route.params.subscribe(params => {
+      this.questionId = params['questionId'];
+      this.examId = params['examId'];
+      this.editMode = !!this.questionId;
+      if (this.editMode) {
+        this.question$ = this.examService.questionSignal(this.examId!, this.questionId!);
       }
     })
-  }
-
-  answersListUpdated() {
-    this.refreshData()
-    this.handleDiscardCalled();
   }
 
   routeHome() {
@@ -161,19 +134,23 @@ export class QuestionEdit implements OnInit, OnDestroy {
   handleConfirmation(confirmed: boolean) {
     this.confirmVisible = false;
     if (confirmed) {
-      this.writer.removeQuestion(this.examId!, this.question?.questionId!).then(response => {
+      this.writer.removeQuestion(this.examId!, this.questionId!).then(response => {
+        this.examService.deleteQuestion(this.examId!, this.questionId!);
         this.routeHome();
       })
     }
   }
 
-  async handleContentSubmit(data: {content: string|null}) {
-    const { content } = data;
+  async handleContentSubmit(data: { content: string | null }) {
+    const {content} = data;
     if (this.editMode) {
-      await this.writer.updateQuestionContent(this.examId!, { questionId: this.question?.questionId, content: content })
+      const question = {questionId: this.questionId, content: content};
+      await this.writer.updateQuestionContent(this.examId!, question)
+      this.examService.updateQuestionContentAtExam(this.examId!, question)
     } else {
-      await this.writer.postQuestion(this.examId!, { content: content! }).then(response => {
-        const { id } = response;
+      await this.writer.postQuestion(this.examId!, {content: content!}).then(response => {
+        const {id} = response;
+        this.examService.addQuestionToExam(this.examId!, {questionId: id, content: content});
         this.router.navigate(['exam', this.examId, 'editQuestion', id]);
       });
     }

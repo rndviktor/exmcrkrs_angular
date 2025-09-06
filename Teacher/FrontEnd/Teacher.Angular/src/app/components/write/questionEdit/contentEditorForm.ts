@@ -38,15 +38,16 @@ export class ContentEditorFormComponent implements OnChanges {
     if (this.contentDiv) {
       setTimeout(() => {
         this.dynamicHeight = this.contentDiv.nativeElement.scrollHeight;
-        console.log('init', this.dynamicHeight);
       }, 0);
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['content'] && this.content) {
-      this.form.patchValue({content: this.content});
-      this.updateHeight();
+      setTimeout(() => {
+        this.form.patchValue({content: this.content});
+        this.updateHeight();
+      })
     }
   }
 

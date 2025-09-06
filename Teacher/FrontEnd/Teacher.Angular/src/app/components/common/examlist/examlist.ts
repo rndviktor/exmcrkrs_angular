@@ -1,11 +1,8 @@
-import {ChangeDetectorRef, Component, OnDestroy} from '@angular/core';
-import {Subject, Subscription, takeUntil} from 'rxjs';
-import {Reader} from '../../../services/reader';
+import {Component} from '@angular/core';
 import {Exam} from '../exam/exam';
 import {TitleEdit} from '../../write/title-edit/title-edit';
-import {SseService} from '../../../services/sse-service';
 import {ApiStatus} from '../api-status/api-status';
-import {ExamType} from '../../../types';
+import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-examlist',
@@ -15,7 +12,8 @@ import {ExamType} from '../../../types';
     ApiStatus
   ],
   template: `
-    <app-api-status (backendAvailable)="handleBackendAvailable($event)" (publishAvailable)="handlePubslishAvailable($event)"/>
+    <app-api-status (backendAvailable)="handleBackendAvailable($event)"
+                    (publishAvailable)="handlePubslishAvailable($event)"/>
     <br/>
     @if (backendAvailable) {
       <ul>
@@ -32,39 +30,34 @@ import {ExamType} from '../../../types';
       <div class="flex flex-col p-8">
         @if (addExamMode) {
           <div class="flex flex-row justify-between w-11/12">
-            <app-title-edit (discardCalled)="handleDiscardTitleEdit()" />
+            <app-title-edit (discardCalled)="handleDiscardTitleEdit()"/>
           </div>
         } @else if (!editedExamId) {
-          <button id="addExamButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl" (click)="handleAddExamClick()">Add Exam</button>
+          <button id="addExamButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
+                  (click)="handleAddExamClick()">Add Exam
+          </button>
         }
       </div>
     }
   `
 })
-export class Examlist implements OnDestroy {
-  private destroy$ = new Subject<void>();
+export class Examlist {
   addExamMode: boolean = false;
-  editedExamId: string|null = null;
-  private subscription?: Subscription;
+  editedExamId: string | null = null;
   backendAvailable: boolean = false;
   publishAvailable: boolean = false;
 
-  exams: ExamType[] = [];
-  constructor(private reader: Reader, private sseService: SseService, private cdr: ChangeDetectorRef) {
-    this.handleListUpdate();
+  get exams() {
+    return this.examService.exams();
+  }
 
-    this.subscription = this.sseService
-      .observeMessagesToAuthor()
-      .subscribe(
-        () => {
-          this.handleListUpdate();
-        },
-        err => console.error('SSE error', err)
-      );
+  constructor(private examService: ExamService) {
+    this.handleListUpdate();
   }
 
   handleBackendAvailable(available: boolean) {
     if (!this.backendAvailable && available) {
+      this.examService.reload();
       this.handleListUpdate()
     }
     this.backendAvailable = available;
@@ -92,20 +85,7 @@ export class Examlist implements OnDestroy {
   }
 
   handleListUpdate() {
-    this.reader.getData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(data => {
-        console.log('received', data?.exams);
-        this.exams = data?.exams ? data.exams : null;
-        this.cdr.detectChanges();
-      });
     this.addExamMode = false;
     this.editedExamId = null;
-  }
-
-  ngOnDestroy() {
-    this.subscription?.unsubscribe();
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

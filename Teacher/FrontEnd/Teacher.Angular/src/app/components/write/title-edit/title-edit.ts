@@ -4,6 +4,7 @@ import {Writer} from '../../../services/writer';
 import {CheckIconComponent} from '../../common/iconed/check-button';
 import {XButton} from '../../common/iconed/x-button';
 import {ExamType} from "../../../types";
+import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-title-edit',
@@ -29,7 +30,7 @@ export class TitleEdit implements OnChanges {
   @Input() exam: ExamType | null = null;
   @Output() discardCalled = new EventEmitter<boolean>();
 
-  constructor(private writer: Writer, private fb: FormBuilder) {
+  constructor(private writer: Writer, private fb: FormBuilder, private examService: ExamService) {
     this.form = this.fb.group({
       title: ['', Validators.required]
     })
@@ -48,12 +49,16 @@ export class TitleEdit implements OnChanges {
       exam.examId = this.exam.examId;
       this.writer.updateExamTitle(exam).then(resp => {
         console.log('got response to update request', resp);
+        this.examService.updateExamTitle(exam);
       })
     } else {
       this.writer.createExam(exam).then(response => {
         console.log('got b/e resp:', response);
+        const {id: examId} = response;
+        this.examService.addExam({...exam, examId})
       })
     }
+    this.handleDiscardCall();
   }
 
   handleDiscardCall() {

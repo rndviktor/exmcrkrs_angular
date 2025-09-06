@@ -7,6 +7,7 @@ import {Confirmation} from '../confirmation/confirmation';
 import {Writer} from '../../../services/writer';
 import {TrashButton} from '../iconed/trash-button';
 import {QuestionType} from "../../../types";
+import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-question',
@@ -19,19 +20,22 @@ import {QuestionType} from "../../../types";
   ],
   template: `
     <div class="p-4 bg-indigo-100">
-      <div class="w-full text-gray-400 text-sm">{{question.questionId}}</div>
+      <div class="w-full text-gray-400 text-sm">{{ question.questionId }}</div>
       <div class="grid grid-cols-12 gap-4">
-        <div class="whitespace-pre-line col-span-10 bg-white">{{question.content}}</div>
+        <div class="whitespace-pre-line col-span-10 bg-white">{{ question.content }}</div>
         <app-pencil-button class="col-span-1" (click)="editQuestionRoute()"/>
         <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
       </div>
       <ul>
         @for (ans of question.answers; track ans.answerId) {
-          <li><app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!" (deleted)="onDeleted()"/></li>
+          <li>
+            <app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!" (deleted)="onDeleted()"/>
+          </li>
         }
       </ul>
     </div>
-    <app-confirmation [visible]="confirmQuestionVisible" [message]="'Do you really want to delete this question?'" (confirmed)="handleConfirmation($event)" />
+    <app-confirmation [visible]="confirmQuestionVisible" [message]="'Do you really want to delete this question?'"
+                      (confirmed)="handleConfirmation($event)"/>
   `,
 })
 export class Question {
@@ -45,7 +49,7 @@ export class Question {
 
   confirmQuestionVisible = false;
 
-  constructor(private router: Router, private writer: Writer) {
+  constructor(private router: Router, private writer: Writer, private examService: ExamService) {
   }
 
   handleDeleteCall() {
@@ -56,6 +60,7 @@ export class Question {
     this.confirmQuestionVisible = false;
     if (confirmed) {
       await this.writer.removeQuestion(this.examId!, this.question.questionId!);
+      this.examService.deleteQuestion(this.examId!, this.question.questionId!)
       this.onDeleted();
     } else {
       // Cancelled

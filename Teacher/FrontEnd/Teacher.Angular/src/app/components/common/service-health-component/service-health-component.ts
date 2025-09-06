@@ -68,7 +68,6 @@ export class ServiceHealthComponent implements OnInit, OnDestroy {
       this.serviceOnlineChange.emit(this.isOnline);
       clearInterval(this.pingInterval)
       this.pingInterval = setInterval(() => this.ping(), this.pingDefault);
-      console.log('online', this.serviceUrl, this.pingDefault);
 
       clearInterval(this.countdownInterval);
       this.timer = 0
