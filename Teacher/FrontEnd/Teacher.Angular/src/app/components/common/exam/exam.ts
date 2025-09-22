@@ -19,6 +19,7 @@ import {Publisher} from '../../../services/publisher';
 import {Subscription} from 'rxjs';
 import {ExamType} from "../../../types";
 import {ExamService} from '../../../services/exam-service';
+import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
 
 @Component({
   selector: 'app-exam',
@@ -28,6 +29,7 @@ import {ExamService} from '../../../services/exam-service';
     Confirmation,
     TrashButton,
     TitleEdit,
+    AccessCodeEdit,
   ],
   template: `
     <div class="flex flex-col p-8 ">
@@ -58,6 +60,11 @@ import {ExamService} from '../../../services/exam-service';
           <app-title-edit [exam]="exam" (discardCalled)="handleDiscardTitleEdit()"/>
         }
       </div>
+      @if (exam.questions.length > 0) {
+        <div class="flex flex-row justify-between bg-indigo-200">
+          <app-access-code-edit [exam]="exam" />
+        </div>
+      }
       <ul>
         @for (question of exam.questions; track question.questionId) {
           <li>
@@ -108,6 +115,7 @@ export class Exam implements OnDestroy, OnChanges {
     this.publishingVersion = this.exam.version!;
     this.isPublishError = false;
     await this.publisher.publishExam(this.exam.examId!)
+    this.examService.resetAccessCode(this.exam)
 
     this.subscription = this.publisher
       .observePublishingMessages(this.exam.examId!)
