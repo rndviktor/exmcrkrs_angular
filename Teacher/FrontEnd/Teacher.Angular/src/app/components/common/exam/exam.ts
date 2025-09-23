@@ -60,7 +60,7 @@ import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
           <app-title-edit [exam]="exam" (discardCalled)="handleDiscardTitleEdit()"/>
         }
       </div>
-      @if (exam?.questions?.length) {
+      @if (exam && exam.questions && exam.questions.length) {
         <div class="flex flex-row justify-between bg-indigo-200">
           <app-access-code-edit [exam]="exam" />
         </div>
