@@ -19,8 +19,9 @@ import {PencilButton} from '../../common/iconed/pencil-button';
   template: `
     <div class="flex flex-row justify-between items-center w-full">
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-row justify-between">
-        <input class="text-2xl font-light px-3 md:placeholder-gray-400 " id="codeEd" type="text" name="codeEd"
+        <input class="text-2xl disabled:text-indigo-500 font-light disabled:font-bold px-3 md:placeholder-gray-400 " id="codeEd" type="text" name="codeEd"
                formControlName="accessCode"
+               [disabled]="isDisabled"
                placeholder="Access Code"/>
 
         @if (!isDisabled) {
@@ -42,9 +43,9 @@ export class AccessCodeEdit implements OnChanges {
 
   isDisabled: boolean = true;
   toggleMode = () => {
+    this.form.patchValue({accessCode: this.exam!.accessCode});
     this.isDisabled = !this.isDisabled;
     this.isDisabled ? this.form.get('accessCode')?.disable() : this.form.get('accessCode')?.enable()
-    this.form.patchValue({accessCode: this.exam!.accessCode});
   }
 
   constructor(private writer: Writer, private examService: ExamService, private fb: FormBuilder,) {
@@ -63,7 +64,7 @@ export class AccessCodeEdit implements OnChanges {
     exam.examId = this.exam!.examId;
     this.writer.assignAccessCode(exam).then(() => {
       this.examService.updateExamAccessCode(exam)
+      this.toggleMode()
     })
-    this.isDisabled = true;
   }
 }
