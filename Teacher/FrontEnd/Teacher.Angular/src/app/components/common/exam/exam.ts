@@ -34,35 +34,31 @@ import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
   template: `
     <div class="flex flex-col p-8 ">
       <div class="flex flex-row justify-between">
-        @if (this.exam.examId !== currentlyEditedTitleExamId) {
-          <div class="flex flex-col w-full">
-            <div class="flex flex-row justify-between">
-              <h3 class="text-3xl font-bold" (dblclick)="handleDoubleClick()">{{ exam.title }}</h3>
-              <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
-            </div>
-            @if (publishAvailable) {
-              <div class="flex flex-row justify-between bg-indigo-200">
-                @if (!publishingVersion) {
-                  <button id="publishExam" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl m-2"
-                          (click)="handlePublishClick()"> Publish exam [{{ exam.examId }} v{{ exam.version }}] to
-                    students
-                  </button>
-                } @else {
-                  <div id="publishingMessaging" class="bg-gray-800 m-2 w-5/6 p-1"
-                       [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']">
-                    {{ publishingMessage }}
-                  </div>
-                }
-              </div>
-            }
+        <div class="flex flex-col w-full">
+          <div class="flex flex-row justify-between">
+            <app-title-edit [exam]="exam"/>
+            <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
           </div>
-        } @else {
-          <app-title-edit [exam]="exam" (discardCalled)="handleDiscardTitleEdit()"/>
-        }
+          @if (publishAvailable) {
+            <div class="flex flex-row justify-between bg-indigo-200">
+              @if (!publishingVersion) {
+                <button id="publishExam" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl m-2"
+                        (click)="handlePublishClick()"> Publish exam [{{ exam.examId }} v{{ exam.version }}] to
+                  students
+                </button>
+              } @else {
+                <div id="publishingMessaging" class="bg-gray-800 m-2 w-5/6 p-1"
+                     [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']">
+                  {{ publishingMessage }}
+                </div>
+              }
+            </div>
+          }
+        </div>
       </div>
       @if (exam && exam.questions && exam.questions.length) {
         <div class="flex flex-row justify-between bg-indigo-200">
-          <app-access-code-edit [exam]="exam" />
+          <app-access-code-edit [exam]="exam"/>
         </div>
       }
       <ul>
@@ -96,10 +92,7 @@ export class Exam implements OnDestroy, OnChanges {
   }
 
   @Input() exam!: ExamType;
-  @Input() currentlyEditedTitleExamId: string | null = null;
   @Input() publishAvailable: boolean = false;
-  @Output() examTitleTriggerEdit = new EventEmitter<string>();
-  @Output() discardTitleEdit = new EventEmitter<boolean>();
   @Output() deleted = new EventEmitter<boolean>();
 
   confirmMainVisible: boolean = false;
@@ -135,15 +128,6 @@ export class Exam implements OnDestroy, OnChanges {
 
   handleDeleteCall() {
     this.confirmMainVisible = true;
-  }
-
-  handleDoubleClick(): void {
-    console.log('clicked twice exam');
-    this.examTitleTriggerEdit.emit(this.exam.examId!);
-  }
-
-  handleDiscardTitleEdit(): void {
-    this.discardTitleEdit.emit(true);
   }
 
   async handleConfirmation(confirmed: boolean) {

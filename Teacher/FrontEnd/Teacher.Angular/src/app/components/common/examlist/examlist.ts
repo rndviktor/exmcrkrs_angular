@@ -19,10 +19,7 @@ import {ExamService} from '../../../services/exam-service';
       <ul>
         @for (ex of exams; track ex.examId) {
           <app-exam [exam]="ex"
-                    (examTitleTriggerEdit)="handleExamTitleDoubleClick($event)"
-                    [currentlyEditedTitleExamId]="editedExamId"
                     [publishAvailable]="publishAvailable"
-                    (discardTitleEdit)="handleDiscardTitleEdit()"
                     (deleted)="deletionHandler()"
           />
         }
@@ -30,9 +27,9 @@ import {ExamService} from '../../../services/exam-service';
       <div class="flex flex-col p-8">
         @if (addExamMode) {
           <div class="flex flex-row justify-between w-11/12">
-            <app-title-edit (discardCalled)="handleDiscardTitleEdit()"/>
+            <app-title-edit (addFinish)="handleDiscardTitleEdit()"/>
           </div>
-        } @else if (!editedExamId) {
+        } @else {
           <button id="addExamButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
                   (click)="handleAddExamClick()">Add Exam
           </button>
@@ -43,7 +40,6 @@ import {ExamService} from '../../../services/exam-service';
 })
 export class Examlist {
   addExamMode: boolean = false;
-  editedExamId: string | null = null;
   backendAvailable: boolean = false;
   publishAvailable: boolean = false;
 
@@ -73,11 +69,6 @@ export class Examlist {
 
   handleDiscardTitleEdit() {
     this.addExamMode = false;
-    this.editedExamId = null;
-  }
-
-  handleExamTitleDoubleClick(examId: string) {
-    this.editedExamId = examId;
   }
 
   deletionHandler() {
@@ -86,6 +77,6 @@ export class Examlist {
 
   handleListUpdate() {
     this.addExamMode = false;
-    this.editedExamId = null;
+    // this.editedExamId = null;
   }
 }
