@@ -19,9 +19,9 @@ import {PencilButton} from '../../common/iconed/pencil-button';
   template: `
     <div class="flex flex-row justify-between items-center w-full">
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-row justify-between">
-        <input class="text-2xl disabled:text-indigo-500 font-light disabled:font-bold px-3 md:placeholder-gray-400 " id="codeEd" type="text" name="codeEd"
+        <input class="text-2xl disabled:text-indigo-500 font-light disabled:font-bold px-3 md:placeholder-gray-400 "
+               id="codeEd" type="text" name="codeEd"
                formControlName="accessCode"
-               [disabled]="isDisabled"
                placeholder="Access Code"/>
 
         @if (!isDisabled) {
@@ -35,11 +35,12 @@ import {PencilButton} from '../../common/iconed/pencil-button';
         <app-pencil-button class="col-span-1" (click)="toggleMode()"/>
       }
     </div>
-    `
+  `
 })
 export class AccessCodeEdit implements OnChanges {
   form: FormGroup;
   @Input() exam: ExamType | null = null;
+
 
   isDisabled: boolean = true;
   toggleMode = () => {
@@ -50,7 +51,7 @@ export class AccessCodeEdit implements OnChanges {
 
   constructor(private writer: Writer, private examService: ExamService, private fb: FormBuilder,) {
     this.form = this.fb.group({
-      accessCode: [{value:'', disabled:true}, Validators.required]
+      accessCode: [{value: '', disabled: true}, Validators.required]
     })
   }
 
@@ -59,6 +60,7 @@ export class AccessCodeEdit implements OnChanges {
       this.form.patchValue({accessCode: this.exam.accessCode});
     }
   }
+
   onSubmit() {
     let exam = this.form.value as ExamType;
     exam.examId = this.exam!.examId;
