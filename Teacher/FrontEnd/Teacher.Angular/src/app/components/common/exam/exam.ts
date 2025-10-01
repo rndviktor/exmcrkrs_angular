@@ -32,7 +32,7 @@ import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
     AccessCodeEdit,
   ],
   template: `
-    <div class="flex flex-col p-8 ">
+    <div class="flex flex-col p-4 ">
       <div class="flex flex-row">
         <div class="flex flex-col w-full">
           <div class="flex flex-row">

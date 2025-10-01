@@ -11,8 +11,6 @@ import {ServiceHealthComponent} from '../service-health-component/service-health
         <app-service-health-component [serviceUrl]="ms.url" [serviceName]="ms.name" (serviceOnlineChange)="handleUpdate(ms.id, $event)"/>
     </div>
   }
-
-  <br/>
   `
 })
 export class ApiStatus  {

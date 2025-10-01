@@ -14,7 +14,6 @@ import {ExamService} from '../../../services/exam-service';
   template: `
     <app-api-status (backendAvailable)="handleBackendAvailable($event)"
                     (publishAvailable)="handlePubslishAvailable($event)"/>
-    <br/>
     @if (backendAvailable) {
       <ul>
         @for (ex of exams; track ex.examId) {
