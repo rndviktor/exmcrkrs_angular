@@ -33,10 +33,10 @@ import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
   ],
   template: `
     <div class="flex flex-col p-8 ">
-      <div class="flex flex-row justify-between">
+      <div class="flex flex-row">
         <div class="flex flex-col w-full">
-          <div class="flex flex-row justify-between">
-            <app-title-edit [exam]="exam"/>
+          <div class="flex flex-row">
+            <app-title-edit class="flex-1" [exam]="exam"/>
             <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
           </div>
           @if (publishAvailable) {

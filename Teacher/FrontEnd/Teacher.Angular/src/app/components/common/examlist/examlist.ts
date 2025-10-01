@@ -26,8 +26,8 @@ import {ExamService} from '../../../services/exam-service';
       </ul>
       <div class="flex flex-col p-8">
         @if (addExamMode) {
-          <div class="flex flex-row justify-between w-11/12">
-            <app-title-edit (addFinish)="handleDiscardTitleEdit()"/>
+          <div class="flex flex-row">
+            <app-title-edit class="flex-1" (addFinish)="handleDiscardTitleEdit()"/>
           </div>
         } @else {
           <button id="addExamButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
