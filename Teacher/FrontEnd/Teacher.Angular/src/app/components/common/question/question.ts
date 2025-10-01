@@ -20,16 +20,20 @@ import {ExamService} from '../../../services/exam-service';
   ],
   template: `
     <div class="p-4 bg-indigo-100">
-      <div class="w-full text-gray-400 text-sm">{{ question.questionId }}</div>
-      <div class="grid grid-cols-12 gap-4">
-        <div class="whitespace-pre-line col-span-10 bg-white">{{ question.content }}</div>
-        <app-pencil-button class="col-span-1" (click)="editQuestionRoute()"/>
-        <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
+      <div class="flex flex-row">
+        <div class="flex-1 text-gray-400 text-sm">{{ question.questionId }}</div>
+        <div>
+          <app-pencil-button class="col-span-1 p-8" (click)="editQuestionRoute()"/>
+          <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
+        </div>
+      </div>
+      <div class="flex flex-row">
+        <div class="whitespace-pre-line flex-1 bg-white">{{ question.content }}</div>
       </div>
       <ul>
         @for (ans of question.answers; track ans.answerId) {
           <li>
-            <app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!" (deleted)="onDeleted()"/>
+            <app-answer [answer]="ans" [editable]=false [examId]="examId!" [questionId]="question.questionId!"/>
           </li>
         }
       </ul>

@@ -14,12 +14,14 @@ import {ExamService} from '../../../services/exam-service';
     TrashButton
   ],
   template: `
-    <div class="flex flex-row justify-between w-11/12">
-      <div class="flex flex-row justify-between items-center w-11/12" (dblclick)="handleDoubleClick()">
+    <div class="flex flex-row">
+      <div class="flex flex-row justify-between items-center flex-1" (dblclick)="handleDoubleClick()">
         <div class="px-3">{{ answer.content }}</div>
         <app-checkbox [id]="answer.answerId" [disabled]="true" [checked]="answer.isCorrect"/>
       </div>
-      <app-trash-button [disabled]="disableDeletion" class="col-span-1" (click)="handleDeleteCall($event)"/>
+      @if (editable) {
+        <app-trash-button [disabled]="disableDeletion" class="col-span-1" (click)="handleDeleteCall($event)"/>
+      }
     </div>
 
     <app-confirmation [visible]="confirmAnswerVisible" [message]="'Do you really want to delete this answer?'"
@@ -30,6 +32,7 @@ export class Answer {
   @Input() examId!: string;
   @Input() questionId!: string;
   @Input() answer!: AnswerType;
+  @Input() editable = true;
   @Input() disableDeletion = false;
   @Output() questionTriggerEdit = new EventEmitter<string>();
   @Output() deleted = new EventEmitter<boolean>();
