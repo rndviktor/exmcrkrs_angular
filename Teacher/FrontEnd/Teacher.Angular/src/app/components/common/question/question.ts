@@ -33,7 +33,7 @@ import {ExamService} from '../../../services/exam-service';
       <ul>
         @for (ans of question.answers; track ans.answerId) {
           <li>
-            <app-answer [answer]="ans" [editable]=false [examId]="examId!" [questionId]="question.questionId!"/>
+            <app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!"/>
           </li>
         }
       </ul>

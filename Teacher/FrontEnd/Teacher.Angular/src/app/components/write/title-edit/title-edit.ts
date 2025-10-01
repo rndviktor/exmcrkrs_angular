@@ -24,9 +24,8 @@ import {ExamService} from '../../../services/exam-service';
   template: `
     <form [formGroup]="form" style="position: relative;" (ngSubmit)="onSubmit()"
           class="flex flex-1 items-center">
-      <input class="text-3xl disabled:text-indigo-500 font-bold px-3 md:placeholder-gray-400 flex-1"
+      <input class="text-3xl disabled:text-indigo-400 font-bold px-3 md:placeholder-gray-400 flex-1"
              id="titleEd" name="titleEd"
-             #inputElement
              type="text"
              formControlName="title"
              placeholder="Title"/>
