@@ -21,12 +21,12 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
   </div>`,
 })
 export class ServiceStatusLights implements OnChanges {
-  leftLight: 'red' | 'yellow' | 'green' = 'red';
-  rightLight: 'red' | 'yellow' | 'green' = 'red';
+  leftLight: 'red' | 'yellow' | 'green' = 'green';
+  rightLight: 'red' | 'yellow' | 'green' = 'green';
 
-  @Input() left1Available = false;
-  @Input() left2Available = false;
-  @Input() rightAvailable = false;
+  @Input() left1Available = true;
+  @Input() left2Available = true;
+  @Input() rightAvailable = true;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.left1Available !== this.left2Available) {
