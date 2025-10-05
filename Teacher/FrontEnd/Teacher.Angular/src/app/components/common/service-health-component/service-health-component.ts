@@ -7,18 +7,11 @@ import {catchError, of} from 'rxjs';
   imports: [],
   template: `
     <div>
-      {{serviceName}} Status: <span [style.color]="isOnline ? 'green' : 'red'">{{ isOnline ? 'Online' : 'Offline' }}</span>
     </div>
-    @if(!isOnline && timer > 0){
-      <div>Timer: {{timer}} seconds</div>
-    }
-    @if(alarmMessage) {
-      <strong> {{alarmMessage}} </strong>
-    }
   `
 })
 export class ServiceHealthComponent implements OnInit, OnDestroy {
-  isOnline: boolean|null = null;
+  isOnline: boolean | null = null;
   timer = 0;
   readonly timerDefault: number = 10;
   readonly pingDefault: number = 25000;
@@ -27,11 +20,11 @@ export class ServiceHealthComponent implements OnInit, OnDestroy {
   @Input() serviceName: string | null = null;
   @Output() serviceOnlineChange = new EventEmitter<boolean>();
 
-  alarmMessage: string | null = null;
   private countdownInterval: any;
   private pingInterval: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   ngOnDestroy(): void {
     clearInterval(this.countdownInterval);
@@ -44,7 +37,7 @@ export class ServiceHealthComponent implements OnInit, OnDestroy {
   }
 
   private ping() {
-    this.http.get(this.serviceUrl!, { observe: 'response'}).pipe(
+    this.http.get(this.serviceUrl!, {observe: 'response'}).pipe(
       catchError((err: HttpErrorResponse) => {
         return of(err);
       })
@@ -71,10 +64,6 @@ export class ServiceHealthComponent implements OnInit, OnDestroy {
 
       clearInterval(this.countdownInterval);
       this.timer = 0
-      if (this.alarmMessage) {
-        this.alarmMessage = `Connection restored`;
-        setTimeout(() => this.alarmMessage = null, 5000)
-      }
     }
   }
 
@@ -90,14 +79,12 @@ export class ServiceHealthComponent implements OnInit, OnDestroy {
 
   startTimer(): void {
     this.timer = this.timerDefault
-    this.alarmMessage = null;
     clearInterval(this.countdownInterval);
 
     this.countdownInterval = setInterval(() => {
       this.timer--;
       if (this.timer <= 0) {
         clearInterval(this.countdownInterval);
-        this.alarmMessage = `Alarm! Stopped being online for ${this.timerDefault} seconds.`;
       }
     }, 1000)
   }

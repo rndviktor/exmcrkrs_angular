@@ -1,23 +1,32 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {ServiceHealthComponent} from '../service-health-component/service-health-component';
+import {ServiceStatusLights} from '../service-status-lights/service-status-lights';
 
 @Component({
   selector: 'app-api-status',
   imports: [
-    ServiceHealthComponent
+    ServiceHealthComponent,
+    ServiceStatusLights
   ],
-  template: `@for(ms of microservices; track ms.id) {
-    <div class="flex flex-col px-8">
-        <app-service-health-component [serviceUrl]="ms.url" [serviceName]="ms.name" (serviceOnlineChange)="handleUpdate(ms.id, $event)"/>
+  template: `
+    <div class="flex flex-row px-8">
+      <app-service-status-lights [left1Available]="this.microservices[0].online"
+                                 [left2Available]="this.microservices[1].online"
+                                 [rightAvailable]="this.microservices[2].online"/>
+      @for (ms of microservices; track ms.id) {
+        <div class="flex flex-column justify-between px-4">
+          <app-service-health-component [serviceUrl]="ms.url" [serviceName]="ms.name"
+                                        (serviceOnlineChange)="handleUpdate(ms.id, $event)"/>
+        </div>
+      }
     </div>
-  }
   `
 })
-export class ApiStatus  {
+export class ApiStatus {
   microservices = [
-    {id: 1, name: 'Write Service', url: 'http://localhost:5010/health', online: false },
-    {id: 2, name: 'Read Service', url: 'http://localhost:5011/health', online: false},
-    {id: 3, name: 'Publish Service', url: 'http://localhost:5012/health', online: false},
+    {id: 1, name: 'Write ', url: 'http://localhost:5010/health', online: false},
+    {id: 2, name: 'Read ', url: 'http://localhost:5011/health', online: false},
+    {id: 3, name: 'Publish ', url: 'http://localhost:5012/health', online: false},
   ];
 
   @Output() backendAvailable: EventEmitter<boolean> = new EventEmitter();
