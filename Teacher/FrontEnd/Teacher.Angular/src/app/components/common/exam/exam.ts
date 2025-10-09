@@ -47,7 +47,7 @@ import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
                   students
                 </button>
               } @else {
-                <div id="publishingMessaging" class="bg-gray-800 m-2 w-5/6 p-1"
+                <div id="publishingMessaging" class="bg-gray-800 m-2 flex-1 p-1"
                      [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']">
                   {{ publishingMessage }}
                 </div>

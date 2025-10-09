@@ -20,9 +20,7 @@ import {Confirmation} from '../../common/confirmation/confirmation';
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-row flex-1">
       <div class="flex flex-row justify-between flex-1">
-        <div class="flex flex-1 justify-between" (dblclick)="toggleMode()">
-          <input class="px-3 md:placeholder-gray-400 disabled:text-gray-400" id="contentEd" type="text" name="contentEd"
-                 formControlName="content" placeholder="Content"/>
+        <div class="flex flex-1 justify-items-start" (dblclick)="toggleMode()">
           <div class="flex items-center space-x-2 px-4">
             <input type="checkbox" id="isCorrect" formControlName="isCorrect"
                    class="w-5 h-5 border-gray-300 rounded focus:ring-2 disabled:text-gray-400 focus:ring-blue-500"/>
@@ -30,6 +28,8 @@ import {Confirmation} from '../../common/confirmation/confirmation';
               Is Correct?
             </label>
           </div>
+          <input class="px-3 md:placeholder-gray-400 disabled:text-gray-400" id="contentEd" type="text" name="contentEd"
+                 formControlName="content" placeholder="Content"/>
         </div>
         @if (isDisabled) {
           <app-trash-button class="col-span-1" (click)="handleDeleteCall($event)"/>

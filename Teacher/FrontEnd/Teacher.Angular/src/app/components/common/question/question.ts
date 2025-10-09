@@ -31,8 +31,8 @@ import {ExamService} from '../../../services/exam-service';
         <div class="whitespace-pre-line flex-1 bg-white">{{ question.content }}</div>
       </div>
       <ul>
-        @for (ans of question.answers; track ans.answerId) {
-          <li>
+        @for (ans of question.answers; track ans.answerId; let even = $even) {
+          <li [class.bg-indigo-100]="even" [class.bg-indigo-200]="!even">
             <app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!"/>
           </li>
         }

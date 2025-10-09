@@ -26,8 +26,8 @@ import {ExamService} from '../../../services/exam-service';
                                [isEditMode]="editMode"/>
       @if (answers?.length) {
         <ul>
-          @for (ans of answers; track ans.answerId) {
-            <li>
+          @for (ans of answers; track ans.answerId; let even = $even) {
+            <li [class.bg-gray-100]="even" [class.bg-gray-200]="!even">
               <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!"
                                (discardCalled)="handleDiscardCalled()"/>
             </li>
