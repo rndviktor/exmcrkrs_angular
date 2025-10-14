@@ -9,9 +9,10 @@ import {AnswerType} from "../../../types";
   ],
   template: `
     <div class="flex flex-row">
-      <div class="flex flex-row justify-items-start items-center flex-1 text-gray-600">
-        <app-checkbox [id]="answer.answerId" [disabled]="true" [checked]="answer.isCorrect"/>
-        <div class="px-3">{{ answer.content }}</div>
+      <div class="flex flex-row justify-items-start flex-1 text-gray-600">
+        <app-checkbox class="flex justify-baseline" [id]="answer.answerId" [disabled]="true"
+                      [checked]="answer.isCorrect"/>
+        <div class="px-3 flex-1 whitespace-pre-wrap ">{{ answer.content }}</div>
       </div>
     </div>
   `

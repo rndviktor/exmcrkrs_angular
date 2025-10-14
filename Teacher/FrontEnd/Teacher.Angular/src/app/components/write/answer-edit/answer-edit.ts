@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {Writer} from '../../../services/writer';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CheckIconComponent} from '../../common/iconed/check-button';
@@ -7,6 +17,7 @@ import {AnswerType} from "../../../types";
 import {ExamService} from '../../../services/exam-service';
 import {TrashButton} from '../../common/iconed/trash-button';
 import {Confirmation} from '../../common/confirmation/confirmation';
+import {PencilButton} from '../../common/iconed/pencil-button';
 
 @Component({
   selector: 'app-answer-edit',
@@ -15,12 +26,13 @@ import {Confirmation} from '../../common/confirmation/confirmation';
     CheckIconComponent,
     XButton,
     TrashButton,
-    Confirmation
+    Confirmation,
+    PencilButton
   ],
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-row flex-1">
       <div class="flex flex-row justify-between flex-1">
-        <div class="flex flex-1 justify-items-start" (dblclick)="toggleMode()">
+        <div class="flex flex-1 justify-items-start">
           <div class="flex items-center space-x-2 px-4">
             <input type="checkbox" id="isCorrect" formControlName="isCorrect"
                    class="w-5 h-5 border-gray-300 rounded focus:ring-2 disabled:text-gray-400 focus:ring-blue-500"/>
@@ -28,10 +40,13 @@ import {Confirmation} from '../../common/confirmation/confirmation';
               Is Correct?
             </label>
           </div>
-          <input class="px-3 md:placeholder-gray-400 disabled:text-gray-400" id="contentEd" type="text" name="contentEd"
-                 formControlName="content" placeholder="Content"/>
+          <textarea class="flex-1 px-3 md:placeholder-gray-400 disabled:text-gray-400 wrap-break-word select-none"
+                    #contentDiv id="contentEd" type="text" name="contentEd"
+                    [style.height.px]="dynamicHeight" (input)="autoResize($event)"
+                    formControlName="content" placeholder="Content"> </textarea>
         </div>
         @if (isDisabled) {
+          <app-pencil-button (click)="toggleMode()"/>
           <app-trash-button class="col-span-1" (click)="handleDeleteCall($event)"/>
         } @else {
           <div class="col-span-1">
@@ -47,6 +62,7 @@ import {Confirmation} from '../../common/confirmation/confirmation';
 
 })
 export class AnswerEdit implements OnChanges, OnInit {
+  @ViewChild('contentDiv') contentDiv!: ElementRef<HTMLDivElement>;
   form: FormGroup;
   @Input() answer: AnswerType | null = null;
   @Input() questionId: string | null = null;
@@ -54,6 +70,7 @@ export class AnswerEdit implements OnChanges, OnInit {
   @Input() loadEnabled = false
   isDisabled: boolean = true;
   confirmVisible = false;
+  dynamicHeight = 20;
   @Output() discardCalled = new EventEmitter<boolean>();
 
   constructor(private examService: ExamService, private writer: Writer, private fb: FormBuilder) {
@@ -66,6 +83,14 @@ export class AnswerEdit implements OnChanges, OnInit {
   ngOnInit(): void {
     if (this.loadEnabled) {
       this.toggleMode();
+    }
+  }
+
+  updateHeight() {
+    if (this.contentDiv) {
+      setTimeout(() => {
+        this.dynamicHeight = this.contentDiv.nativeElement.scrollHeight;
+      }, 0);
     }
   }
 
@@ -92,7 +117,10 @@ export class AnswerEdit implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['answer'] && this.answer) {
-      this.form.patchValue({...this.answer});
+      setTimeout(() => {
+        this.form.patchValue({...this.answer});
+        this.updateHeight();
+      })
     }
   }
 
@@ -118,4 +146,12 @@ export class AnswerEdit implements OnChanges, OnInit {
     this.toggleMode()
     this.discardCalled.emit(true);
   }
+
+  autoResize(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto'; // reset height
+    textarea.style.height = `${textarea.scrollHeight}px`; // set height based on scrollHeight
+  }
+
+  protected readonly console = console;
 }
