@@ -39,6 +39,17 @@ export class ExamService {
     this.exams.update(x => [...x, exam]);
   }
 
+  resetAccessCode(exam: ExamType) {
+    if (exam) {
+      exam.accessCode = undefined;
+      this.exams.update(x => x.map(ex => (ex.examId === exam.examId ? {...exam} : ex)));
+    }
+  }
+
+  updateExamAccessCode(updateExam: ExamType) {
+    this.exams.update(x => x.map(ex => (ex.examId === updateExam.examId ? {...ex, accessCode: updateExam.accessCode} : ex)));
+  }
+
   updateExamTitle(updateExam: ExamType) {
     this.exams.update(x => x.map(ex => (ex.examId === updateExam.examId ? {...ex, title: updateExam.title} : ex)));
   }

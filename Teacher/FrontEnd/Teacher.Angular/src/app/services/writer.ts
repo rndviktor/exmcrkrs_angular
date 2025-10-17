@@ -24,6 +24,11 @@ export class Writer {
     return await this.http.put<any>(target, {authorId: this.teacherId, title: exam.title }).toPromise();
   }
 
+  async assignAccessCode(exam: ExamType) {
+    const target = `${this.baseUrl}/${this.apiPrefix}/assignAccessCode/${exam.examId!}`;
+    return await this.http.put<any>(target, {authorId: this.teacherId, accessCode: exam.accessCode! }).toPromise();
+  }
+
   async postQuestion(examId: string, question: any): Promise<any> {
     const target = `${this.baseUrl}/${this.apiPrefix}/addQuestion/${examId}`;
     return await this.http.put<any>(target, question).toPromise();

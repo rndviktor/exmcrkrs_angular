@@ -4,7 +4,6 @@ import {Writer} from '../../../services/writer';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HomeButton} from '../../common/iconed/home-button';
 import {Confirmation} from '../../common/confirmation/confirmation';
-import {Answer} from '../../common/answer/answer';
 import {AnswerEdit} from '../answer-edit/answer-edit';
 import {TrashButton} from '../../common/iconed/trash-button';
 import {Subscription} from 'rxjs';
@@ -14,7 +13,7 @@ import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-question',
-  imports: [ContentEditorFormComponent, HomeButton, Confirmation, Answer, AnswerEdit, TrashButton, ApiStatus],
+  imports: [ContentEditorFormComponent, HomeButton, Confirmation, AnswerEdit, TrashButton, ApiStatus],
   template: `
     <app-api-status (backendAvailable)="handleBackendAvailable($event)"/>
     <br/>
@@ -27,26 +26,17 @@ import {ExamService} from '../../../services/exam-service';
                                [isEditMode]="editMode"/>
       @if (answers?.length) {
         <ul>
-          @for (ans of answers; track ans.answerId) {
-            <li>
-              @if (editedAnswerId !== ans.answerId) {
-                <app-answer
-                  [answer]="ans"
-                  [examId]="examId!"
-                  [disableDeletion]="addAnswerMode || (!!editedAnswerId && editedAnswerId !== ans.answerId)"
-                  [questionId]="questionId!"
-                  (questionTriggerEdit)="handleAnswerDoubleClick($event)"/>
-              } @else {
-                <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!"
-                                 (discardCalled)="handleDiscardCalled()"/>
-              }
+          @for (ans of answers; track ans.answerId; let even = $even) {
+            <li [class.bg-gray-100]="even" [class.bg-gray-200]="!even">
+              <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!"
+                               (discardCalled)="handleDiscardCalled()"/>
             </li>
           }
         </ul>
       }
       @if (addAnswerMode) {
-        <app-answer-edit [questionId]="questionId!" [examId]="examId!" (discardCalled)="handleDiscardCalled()"/>
-      } @else if (!editedAnswerId && !!questionId) {
+        <app-answer-edit [questionId]="questionId!" [loadEnabled]="true" [examId]="examId!" (discardCalled)="handleDiscardCalled()"/>
+      } @else if (!!questionId) {
         <button id="addAnswerButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
                 (click)="handleAddAnswerPressed()">Add
           Answer
@@ -63,7 +53,6 @@ export class QuestionEdit implements OnInit, OnDestroy {
   examId: string | null = null;
   questionId: string | null = null;
   addAnswerMode: boolean = false;
-  editedAnswerId: string | null = null;
   subscription?: Subscription;
   confirmVisible = false;
   backendAvailable: boolean = false;
@@ -98,15 +87,8 @@ export class QuestionEdit implements OnInit, OnDestroy {
     this.addAnswerMode = true;
     this.cdr.detectChanges();
   }
-
-  handleAnswerDoubleClick(data: any) {
-    this.editedAnswerId = data;
-    this.cdr.detectChanges();
-  }
-
   handleDiscardCalled() {
     this.addAnswerMode = false;
-    this.editedAnswerId = null;
     setTimeout(() => this.cdr.detectChanges(), 50);
   }
 

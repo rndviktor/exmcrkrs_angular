@@ -14,5 +14,6 @@ export interface ExamType {
   examId: string | null;
   version: number | null | undefined;
   title: string;
+  accessCode?: string;
   questions: QuestionType[];
 }
