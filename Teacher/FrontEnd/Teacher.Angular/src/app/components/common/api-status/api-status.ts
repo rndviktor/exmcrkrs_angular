@@ -10,9 +10,9 @@ import {ServiceStatusLights} from '../service-status-lights/service-status-light
   ],
   template: `
     <div class="flex flex-row px-8">
-      <app-service-status-lights [left1Available]="this.microservices[0].online"
-                                 [left2Available]="this.microservices[1].online"
-                                 [rightAvailable]="this.microservices[2].online"/>
+<!--      <app-service-status-lights [left1Available]="this.microservices[0].online"-->
+<!--                                 [left2Available]="this.microservices[1].online"-->
+<!--                                 [rightAvailable]="this.microservices[2].online"/>-->
       @for (ms of microservices; track ms.id) {
         <div class="flex flex-column justify-between px-4">
           <app-service-health-component [serviceUrl]="ms.url" [serviceName]="ms.name"
