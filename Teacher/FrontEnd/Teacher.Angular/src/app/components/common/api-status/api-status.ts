@@ -1,12 +1,10 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {ServiceHealthComponent} from '../service-health-component/service-health-component';
-import {ServiceStatusLights} from '../service-status-lights/service-status-lights';
 
 @Component({
   selector: 'app-api-status',
   imports: [
     ServiceHealthComponent,
-    ServiceStatusLights
   ],
   template: `
     <div class="flex flex-row px-8">
