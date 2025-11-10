@@ -7,16 +7,13 @@ import {Confirmation} from '../../common/confirmation/confirmation';
 import {AnswerEdit} from '../answer-edit/answer-edit';
 import {TrashButton} from '../../common/iconed/trash-button';
 import {Subscription} from 'rxjs';
-import {ApiStatus} from '../../common/api-status/api-status';
 import {QuestionType} from "../../../types";
 import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-question',
-  imports: [ContentEditorFormComponent, HomeButton, Confirmation, AnswerEdit, TrashButton, ApiStatus],
+  imports: [ContentEditorFormComponent, HomeButton, Confirmation, AnswerEdit, TrashButton],
   template: `
-    <app-api-status (backendAvailable)="handleBackendAvailable($event)"/>
-    <br/>
     <div class="flex flex-col p-8 ">
       <div class="flex flex-row justify-between">
         <app-home-button (click)="routeHome()"/>
@@ -35,7 +32,8 @@ import {ExamService} from '../../../services/exam-service';
         </ul>
       }
       @if (addAnswerMode) {
-        <app-answer-edit [questionId]="questionId!" [loadEnabled]="true" [examId]="examId!" (discardCalled)="handleDiscardCalled()"/>
+        <app-answer-edit [questionId]="questionId!" [loadEnabled]="true" [examId]="examId!"
+                         (discardCalled)="handleDiscardCalled()"/>
       } @else if (!!questionId) {
         <button id="addAnswerButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
                 (click)="handleAddAnswerPressed()">Add
@@ -76,17 +74,11 @@ export class QuestionEdit implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 
-  handleBackendAvailable(available: boolean) {
-    if (this.backendAvailable && !available) {
-      this.routeHome();
-    }
-    this.backendAvailable = available;
-  }
-
   handleAddAnswerPressed() {
     this.addAnswerMode = true;
     this.cdr.detectChanges();
   }
+
   handleDiscardCalled() {
     this.addAnswerMode = false;
     setTimeout(() => this.cdr.detectChanges(), 50);

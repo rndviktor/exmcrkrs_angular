@@ -39,21 +39,19 @@ import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
             <app-title-edit class="flex-1" [exam]="exam"/>
             <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
           </div>
-          @if (publishAvailable) {
-            <div class="flex flex-row justify-between bg-indigo-200">
-              @if (!publishingVersion) {
-                <button id="publishExam" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl m-2"
-                        (click)="handlePublishClick()"> Publish exam [{{ exam.examId }} v{{ exam.version }}] to
-                  students
-                </button>
-              } @else {
-                <div id="publishingMessaging" class="bg-gray-800 m-2 flex-1 p-1"
-                     [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']">
-                  {{ publishingMessage }}
-                </div>
-              }
-            </div>
-          }
+          <div class="flex flex-row justify-between bg-indigo-200">
+            @if (!publishingVersion) {
+              <button id="publishExam" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl m-2"
+                      (click)="handlePublishClick()"> Publish exam [{{ exam.examId }} v{{ exam.version }}] to
+                students
+              </button>
+            } @else {
+              <div id="publishingMessaging" class="bg-gray-800 m-2 flex-1 p-1"
+                   [ngClass]="[isPublishError ? 'text-red-500' : 'text-green-500']">
+                {{ publishingMessage }}
+              </div>
+            }
+          </div>
         </div>
       </div>
       @if (exam && exam.questions && exam.questions.length) {
@@ -92,7 +90,6 @@ export class Exam implements OnDestroy, OnChanges {
   }
 
   @Input() exam!: ExamType;
-  @Input() publishAvailable: boolean = false;
   @Output() deleted = new EventEmitter<boolean>();
 
   confirmMainVisible: boolean = false;
