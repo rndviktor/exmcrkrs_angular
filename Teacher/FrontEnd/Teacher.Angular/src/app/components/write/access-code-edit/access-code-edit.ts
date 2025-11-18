@@ -2,7 +2,6 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CheckIconComponent} from '../../common/iconed/check-button';
 import {XButton} from '../../common/iconed/x-button';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ExamService} from '../../../services/exam-service';
 import {ExamType} from '../../../types';
 import {Writer} from '../../../services/writer';
 import {PencilButton} from '../../common/iconed/pencil-button';
@@ -49,7 +48,7 @@ export class AccessCodeEdit implements OnChanges {
     this.isDisabled ? this.form.get('accessCode')?.disable() : this.form.get('accessCode')?.enable()
   }
 
-  constructor(private writer: Writer, private examService: ExamService, private fb: FormBuilder,) {
+  constructor(private writer: Writer, private fb: FormBuilder,) {
     this.form = this.fb.group({
       accessCode: [{value: '', disabled: true}, Validators.required]
     })
@@ -61,12 +60,10 @@ export class AccessCodeEdit implements OnChanges {
     }
   }
 
-  onSubmit() {
+  onSubmit = async () => {
     let exam = this.form.value as ExamType;
     exam.examId = this.exam!.examId;
-    this.writer.assignAccessCode(exam).then(() => {
-      this.examService.updateExamAccessCode(exam)
-      this.toggleMode()
-    })
+    await this.writer.assignAccessCode(exam);
+    this.toggleMode();
   }
 }

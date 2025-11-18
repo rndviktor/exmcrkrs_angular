@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Answer} from '../answer/answer';
 import {PencilButton} from '../iconed/pencil-button';
@@ -7,7 +7,6 @@ import {Confirmation} from '../confirmation/confirmation';
 import {Writer} from '../../../services/writer';
 import {TrashButton} from '../iconed/trash-button';
 import {QuestionType} from "../../../types";
-import {ExamService} from '../../../services/exam-service';
 
 @Component({
   selector: 'app-question',
@@ -53,7 +52,7 @@ export class Question {
 
   confirmQuestionVisible = false;
 
-  constructor(private router: Router, private writer: Writer, private examService: ExamService) {
+  constructor(private router: Router, private writer: Writer) {
   }
 
   handleDeleteCall() {
@@ -64,7 +63,6 @@ export class Question {
     this.confirmQuestionVisible = false;
     if (confirmed) {
       await this.writer.removeQuestion(this.examId!, this.question.questionId!);
-      this.examService.deleteQuestion(this.examId!, this.question.questionId!)
       this.onDeleted();
     } else {
       // Cancelled

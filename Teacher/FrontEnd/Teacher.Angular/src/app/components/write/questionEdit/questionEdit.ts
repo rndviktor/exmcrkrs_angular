@@ -53,11 +53,7 @@ export class QuestionEdit implements OnInit, OnDestroy {
   addAnswerMode: boolean = false;
   subscription?: Subscription;
   confirmVisible = false;
-  backendAvailable: boolean = false;
 
-  get question() {
-    return this.question$;
-  }
 
   get answers() {
     return this.question$ != null ? this.question$()?.answers : null;
@@ -105,13 +101,11 @@ export class QuestionEdit implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  handleConfirmation(confirmed: boolean) {
+  handleConfirmation = async (confirmed: boolean) => {
     this.confirmVisible = false;
     if (confirmed) {
-      this.writer.removeQuestion(this.examId!, this.questionId!).then(response => {
-        this.examService.deleteQuestion(this.examId!, this.questionId!);
-        this.routeHome();
-      })
+      await this.writer.removeQuestion(this.examId!, this.questionId!);
+      this.routeHome();
     }
   }
 
@@ -120,13 +114,9 @@ export class QuestionEdit implements OnInit, OnDestroy {
     if (this.editMode) {
       const question = {questionId: this.questionId, content: content};
       await this.writer.updateQuestionContent(this.examId!, question)
-      this.examService.updateQuestionContentAtExam(this.examId!, question)
     } else {
-      await this.writer.postQuestion(this.examId!, {content: content!}).then(response => {
-        const {id} = response;
-        this.examService.addQuestionToExam(this.examId!, {questionId: id, content: content});
-        this.router.navigate(['exam', this.examId, 'editQuestion', id]);
-      });
+      const id = await this.writer.postQuestion(this.examId!, {content: content!});
+      await this.router.navigate(['exam', this.examId, 'editQuestion', id]);
     }
   }
 }

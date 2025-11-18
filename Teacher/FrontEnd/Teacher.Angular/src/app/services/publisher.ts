@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {ExamService} from './exam-service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,11 @@ export class Publisher {
   private baseUrl: string = 'http://localhost:5012';
   private apiEndpoint: string = 'api/v1';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private examService: ExamService) {}
   async publishExam(examId: string) {
     const target = `${this.baseUrl}/${this.apiEndpoint}/publish/${examId}`;
-    return await this.http.post<any>(target, { authorId: this.teacherId}).toPromise();
+    await this.http.post<any>(target, { authorId: this.teacherId}).toPromise();
+    this.examService.resetAccessCode(examId)
   }
 
   observePublishingMessages(examId: string): Observable<string> {

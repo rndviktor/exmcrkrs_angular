@@ -39,7 +39,6 @@ export class Examlist {
 
   constructor(private examService: ExamService) {
     this.examService.reload();
-    this.handleListUpdate();
   }
 
   handleAddExamClick() {
@@ -56,6 +55,5 @@ export class Examlist {
 
   handleListUpdate() {
     this.addExamMode = false;
-    // this.editedExamId = null;
   }
 }

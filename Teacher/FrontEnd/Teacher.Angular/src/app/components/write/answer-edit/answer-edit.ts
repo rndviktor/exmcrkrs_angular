@@ -14,7 +14,6 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {CheckIconComponent} from '../../common/iconed/check-button';
 import {XButton} from '../../common/iconed/x-button';
 import {AnswerType} from "../../../types";
-import {ExamService} from '../../../services/exam-service';
 import {TrashButton} from '../../common/iconed/trash-button';
 import {Confirmation} from '../../common/confirmation/confirmation';
 import {PencilButton} from '../../common/iconed/pencil-button';
@@ -73,7 +72,7 @@ export class AnswerEdit implements OnChanges, OnInit {
   dynamicHeight = 20;
   @Output() discardCalled = new EventEmitter<boolean>();
 
-  constructor(private examService: ExamService, private writer: Writer, private fb: FormBuilder) {
+  constructor(private writer: Writer, private fb: FormBuilder) {
     this.form = this.fb.group({
       content: [{value: '', disabled: true}, Validators.required],
       isCorrect: [{value: false, disabled: true}, Validators.required],
@@ -102,7 +101,6 @@ export class AnswerEdit implements OnChanges, OnInit {
     this.confirmVisible = false;
     if (confirmed) {
       await this.writer.removeAnswer(this.examId!, this.questionId!, this.answer!.answerId!);
-      this.examService.deleteAnswerWithinQuestion(this.examId!, this.questionId!, this.answer!.answerId!)
     } else {
       // Cancelled
       console.log('Delete cancelled');
@@ -124,19 +122,14 @@ export class AnswerEdit implements OnChanges, OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit = async () => {
     let answer = this.form.value as AnswerType;
 
     if (this.answer?.answerId) {
       answer.answerId = this.answer.answerId;
-      this.writer.updateAnswer(this.examId!, this.questionId!, answer).then(response => {
-        this.examService.updateAnswerWithinQuestion(this.examId!, this.questionId!, answer);
-      })
+      await this.writer.updateAnswer(this.examId!, this.questionId!, answer);
     } else {
-      this.writer.addAnswer(this.examId!, this.questionId!, answer).then(response => {
-        const {id: answerId} = response
-        this.examService.addAnswerToQuestion(this.examId!, this.questionId!, {...answer, answerId});
-      })
+      await this.writer.addAnswer(this.examId!, this.questionId!, answer);
     }
 
     this.handleDiscardCall();

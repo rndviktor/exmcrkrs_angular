@@ -18,7 +18,6 @@ import {TitleEdit} from '../../write/title-edit/title-edit';
 import {Publisher} from '../../../services/publisher';
 import {Subscription} from 'rxjs';
 import {ExamType} from "../../../types";
-import {ExamService} from '../../../services/exam-service';
 import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
 
 @Component({
@@ -77,7 +76,7 @@ import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
 export class Exam implements OnDestroy, OnChanges {
   private subscription?: Subscription;
 
-  constructor(private examService: ExamService, private router: Router, private writer: Writer, private publisher: Publisher, private cdr: ChangeDetectorRef) {
+  constructor(private router: Router, private writer: Writer, private publisher: Publisher, private cdr: ChangeDetectorRef) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -105,7 +104,6 @@ export class Exam implements OnDestroy, OnChanges {
     this.publishingVersion = this.exam.version!;
     this.isPublishError = false;
     await this.publisher.publishExam(this.exam.examId!)
-    this.examService.resetAccessCode(this.exam)
 
     this.subscription = this.publisher
       .observePublishingMessages(this.exam.examId!)
@@ -131,7 +129,6 @@ export class Exam implements OnDestroy, OnChanges {
     this.confirmMainVisible = false;
     if (confirmed) {
       await this.writer.deleteExam(this.exam.examId!);
-      this.examService.deleteExam(this.exam.examId!);
       this.onDeleted();
     } else {
       // Cancelled
