@@ -92,8 +92,8 @@ export class QuestionEdit implements OnInit, OnDestroy {
     })
   }
 
-  routeHome() {
-    this.router.navigate(['/']);
+  routeHome = async ()=> {
+    await this.router.navigate(['/']);
   }
 
   showConfirm(visible: boolean) {
@@ -105,7 +105,7 @@ export class QuestionEdit implements OnInit, OnDestroy {
     this.confirmVisible = false;
     if (confirmed) {
       await this.writer.removeQuestion(this.examId!, this.questionId!);
-      this.routeHome();
+      await this.routeHome();
     }
   }
 
