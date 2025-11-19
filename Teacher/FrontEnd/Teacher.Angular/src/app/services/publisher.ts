@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {firstValueFrom, Observable} from 'rxjs';
 import {ExamService} from './exam-service';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class Publisher {
   constructor(private http: HttpClient, private examService: ExamService) {}
   async publishExam(examId: string) {
     const target = `${this.baseUrl}/${this.apiEndpoint}/publish/${examId}`;
-    await this.http.post<any>(target, { authorId: this.teacherId}).toPromise();
+    await firstValueFrom(this.http.post<any>(target, { authorId: this.teacherId}));
     this.examService.resetAccessCode(examId)
   }
 

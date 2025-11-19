@@ -70,7 +70,7 @@ export class Question {
     }
   }
 
-  editQuestionRoute() {
-    this.router.navigate(['exam', this.examId, 'editQuestion', this.question.questionId]);
+  editQuestionRoute = async () => {
+    await this.router.navigate(['exam', this.examId, 'editQuestion', this.question.questionId]);
   }
 }

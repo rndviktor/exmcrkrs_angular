@@ -96,8 +96,8 @@ export class Exam implements OnDestroy, OnChanges {
   isPublishError: boolean = false;
   publishingMessage: string = ""
 
-  addQuestionRoute() {
-    this.router.navigate(['exam', this.exam.examId, 'addQuestion']);
+  addQuestionRoute = async () => {
+    await this.router.navigate(['exam', this.exam.examId, 'addQuestion']);
   }
 
   async handlePublishClick() {
@@ -107,14 +107,14 @@ export class Exam implements OnDestroy, OnChanges {
 
     this.subscription = this.publisher
       .observePublishingMessages(this.exam.examId!)
-      .subscribe(
-        message => {
+      .subscribe({
+        next: message => {
           this.publishingMessage = message;
           this.isPublishError = message.startsWith("Err:")
           this.cdr.detectChanges();
         },
-        err => console.error('publish SSE error', err)
-      );
+        error: message => {console.error('publish SSE error', message)}
+      });
   }
 
   onDeleted() {

@@ -16,8 +16,4 @@ export class Reader {
   getData(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}${this.apiEndpoint}examLookup/byAuthorId/${this.teacherId}`);
   }
-
-  getQuestionById(questionId: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}${this.apiEndpoint}questionLookup/byId/${questionId}`);
-  }
 }

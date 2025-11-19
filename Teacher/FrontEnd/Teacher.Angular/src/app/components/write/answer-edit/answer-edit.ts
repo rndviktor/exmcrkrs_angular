@@ -46,7 +46,7 @@ import {PencilButton} from '../../common/iconed/pencil-button';
         </div>
         @if (isDisabled) {
           <app-pencil-button (click)="toggleMode()"/>
-          <app-trash-button class="col-span-1" (click)="handleDeleteCall($event)"/>
+          <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
         } @else {
           <div class="col-span-1">
             <app-check type="submit" [disabled]="form.pristine || form.invalid"/>
@@ -93,7 +93,7 @@ export class AnswerEdit implements OnChanges, OnInit {
     }
   }
 
-  handleDeleteCall(data: any) {
+  handleDeleteCall() {
     this.confirmVisible = true;
   }
 
@@ -145,6 +145,4 @@ export class AnswerEdit implements OnChanges, OnInit {
     textarea.style.height = 'auto'; // reset height
     textarea.style.height = `${textarea.scrollHeight}px`; // set height based on scrollHeight
   }
-
-  protected readonly console = console;
 }
