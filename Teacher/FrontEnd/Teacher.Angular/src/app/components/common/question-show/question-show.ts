@@ -9,7 +9,7 @@ import {TrashButton} from '../iconed/trash-button';
 import {QuestionType} from "../../../types";
 
 @Component({
-  selector: 'app-question',
+  selector: 'app-question-show',
   imports: [
     CommonModule,
     Answer,

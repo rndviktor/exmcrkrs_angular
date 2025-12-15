@@ -11,7 +11,7 @@ import {QuestionType} from "../../../types";
 import {ExamService} from '../../../services/exam-service';
 
 @Component({
-  selector: 'app-question',
+  selector: 'app-question-edit',
   imports: [ContentEditorFormComponent, HomeButton, Confirmation, AnswerEdit, TrashButton],
   template: `
     <div class="flex flex-col p-8 ">

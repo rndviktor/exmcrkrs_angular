@@ -9,7 +9,6 @@ import {
   SimpleChanges
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Question} from '../question/question';
 import {Router} from '@angular/router';
 import {Confirmation} from '../confirmation/confirmation';
 import {Writer} from '../../../services/writer';
@@ -19,6 +18,7 @@ import {Publisher} from '../../../services/publisher';
 import {Subscription} from 'rxjs';
 import {ExamType} from "../../../types";
 import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
+import {Question} from '../question-show/question-show';
 
 @Component({
   selector: 'app-exam',
@@ -61,7 +61,7 @@ import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
       <ul>
         @for (question of exam.questions; track question.questionId) {
           <li>
-            <app-question [question]="question" [examId]="exam.examId" (deleted)="onDeleted()"/>
+            <app-question-show [question]="question" [examId]="exam.examId" (deleted)="onDeleted()"/>
           </li>
         }
       </ul>
