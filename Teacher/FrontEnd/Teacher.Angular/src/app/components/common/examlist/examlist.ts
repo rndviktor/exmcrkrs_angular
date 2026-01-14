@@ -10,24 +10,24 @@ import {ExamService} from '../../../services/exam-service';
     TitleEdit,
   ],
   template: `
-    <ul>
-      @for (ex of exams; track ex.examId) {
-        <app-exam [exam]="ex"
-                  (deleted)="deletionHandler()"
-        />
-      }
-    </ul>
-    <div class="flex flex-col p-8">
-      @if (addExamMode) {
-        <div class="flex flex-row">
-          <app-title-edit class="flex-1" (addFinish)="handleDiscardTitleEdit()"/>
-        </div>
-      } @else {
-        <button id="addExamButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
-                (click)="handleAddExamClick()">Add Exam
-        </button>
-      }
-    </div>
+      <ul>
+          @for (ex of exams; track ex.ExamId) {
+              <app-exam [exam]="ex"
+                        (deleted)="deletionHandler()"
+              />
+          }
+      </ul>
+      <div class="flex flex-col p-8">
+          @if (addExamMode) {
+              <div class="flex flex-row">
+                  <app-title-edit class="flex-1" (addFinish)="handleDiscardTitleEdit()"/>
+              </div>
+          } @else {
+              <button id="addExamButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
+                      (click)="handleAddExamClick()">Add Exam
+              </button>
+          }
+      </div>
   `
 })
 export class Examlist {

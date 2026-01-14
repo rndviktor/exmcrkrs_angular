@@ -14,35 +14,35 @@ import {ExamService} from '../../../services/exam-service';
   selector: 'app-question-edit',
   imports: [ContentEditorFormComponent, HomeButton, Confirmation, AnswerEdit, TrashButton],
   template: `
-    <div class="flex flex-col p-8 ">
-      <div class="flex flex-row justify-between">
-        <app-home-button (click)="routeHome()"/>
-        <app-trash-button (click)="showConfirm(true)"/>
-      </div>
-      <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="content"
-                               [isEditMode]="editMode"/>
-      @if (answers?.length) {
-        <ul>
-          @for (ans of answers; track ans.answerId; let even = $even) {
-            <li [class.bg-gray-100]="even" [class.bg-gray-200]="!even">
-              <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!"
-                               (discardCalled)="handleDiscardCalled()"/>
-            </li>
+      <div class="flex flex-col p-8 ">
+          <div class="flex flex-row justify-between">
+              <app-home-button (click)="routeHome()"/>
+              <app-trash-button (click)="showConfirm(true)"/>
+          </div>
+          <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="content"
+                                   [isEditMode]="editMode"/>
+          @if (answers?.length) {
+              <ul>
+                  @for (ans of answers; track ans.AnswerId; let even = $even) {
+                      <li [class.bg-gray-100]="even" [class.bg-gray-200]="!even">
+                          <app-answer-edit [answer]="ans" [questionId]="questionId!" [examId]="examId!"
+                                           (discardCalled)="handleDiscardCalled()"/>
+                      </li>
+                  }
+              </ul>
           }
-        </ul>
-      }
-      @if (addAnswerMode) {
-        <app-answer-edit [questionId]="questionId!" [loadEnabled]="true" [examId]="examId!"
-                         (discardCalled)="handleDiscardCalled()"/>
-      } @else if (!!questionId) {
-        <button id="addAnswerButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
-                (click)="handleAddAnswerPressed()">Add
-          Answer
-        </button>
-      }
-    </div>
-    <app-confirmation [visible]="confirmVisible" [message]="'Do you really want to delete this question?'"
-                      (confirmed)="handleConfirmation($event)"/>
+          @if (addAnswerMode) {
+              <app-answer-edit [questionId]="questionId!" [loadEnabled]="true" [examId]="examId!"
+                               (discardCalled)="handleDiscardCalled()"/>
+          } @else if (!!questionId) {
+              <button id="addAnswerButton" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl"
+                      (click)="handleAddAnswerPressed()">Add
+                  Answer
+              </button>
+          }
+      </div>
+      <app-confirmation [visible]="confirmVisible" [message]="'Do you really want to delete this question?'"
+                        (confirmed)="handleConfirmation($event)"/>
   `,
 })
 export class QuestionEdit implements OnInit, OnDestroy {
@@ -56,11 +56,11 @@ export class QuestionEdit implements OnInit, OnDestroy {
 
 
   get answers() {
-    return this.question$ != null ? this.question$()?.answers : null;
+    return this.question$ != null ? this.question$()?.Answers : null;
   }
 
   get content() {
-    return this.question$ != null ? this.question$()?.content : null;
+    return this.question$ != null ? this.question$()?.Content : null;
   }
 
   constructor(private examService: ExamService, private writer: Writer, private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef) {
@@ -112,7 +112,7 @@ export class QuestionEdit implements OnInit, OnDestroy {
   async handleContentSubmit(data: { content: string | null }) {
     const {content} = data;
     if (this.editMode) {
-      const question = {questionId: this.questionId, content: content};
+      const question = {QuestionId: this.questionId, Content: content};
       await this.writer.updateQuestionContent(this.examId!, question)
     } else {
       const id = await this.writer.postQuestion(this.examId!, {content: content!});

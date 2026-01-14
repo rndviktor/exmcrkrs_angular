@@ -43,7 +43,7 @@ export class AccessCodeEdit implements OnChanges {
 
   isDisabled: boolean = true;
   toggleMode = () => {
-    this.form.patchValue({accessCode: this.exam!.accessCode});
+    this.form.patchValue({accessCode: this.exam!.AccessCode});
     this.isDisabled = !this.isDisabled;
     this.isDisabled ? this.form.get('accessCode')?.disable() : this.form.get('accessCode')?.enable()
   }
@@ -56,13 +56,13 @@ export class AccessCodeEdit implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['exam'] && this.exam) {
-      this.form.patchValue({accessCode: this.exam.accessCode});
+      this.form.patchValue({accessCode: this.exam.AccessCode});
     }
   }
 
   onSubmit = async () => {
     let exam = this.form.value as ExamType;
-    exam.examId = this.exam!.examId;
+    exam.ExamId = this.exam!.ExamId;
     await this.writer.assignAccessCode(exam);
     this.toggleMode();
   }

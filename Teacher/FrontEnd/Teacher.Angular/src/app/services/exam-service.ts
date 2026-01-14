@@ -15,7 +15,7 @@ export class ExamService {
   loadExams() {
     if (!this.isLoaded) {
       this.reader.getData().subscribe((data) => {
-        this.examSignal.set(data?.exams || [])
+        this.examSignal.set(data?.Exams || [])
         this.isLoaded = true;
       })
     }
@@ -31,48 +31,48 @@ export class ExamService {
   }
 
   questionSignal(examId: string, questionId: string) {
-    return computed(() => this.examSignal().find(ex => ex.examId === examId)?.questions.find(q => q.questionId === questionId));
+    return computed(() => this.examSignal().find(ex => ex.ExamId === examId)?.Questions.find(q => q.QuestionId === questionId));
   }
 
   addExam(exam: ExamType) {
-    exam.version = 1;
+    exam.Version = 1;
     this.exams.update(x => [...x, exam]);
   }
 
   resetAccessCode(examId: string) {
     if (examId) {
-      this.exams.update(x => x.map(ex => (ex.examId === examId ? {...ex, accessCode: undefined} : ex)));
+      this.exams.update(x => x.map(ex => (ex.ExamId === examId ? {...ex, AccessCode: undefined} : ex)));
     }
   }
 
   updateExamAccessCode(updateExam: ExamType) {
-    this.exams.update(x => x.map(ex => (ex.examId === updateExam.examId ? {...ex, accessCode: updateExam.accessCode} : ex)));
+    this.exams.update(x => x.map(ex => (ex.ExamId === updateExam.ExamId ? {...ex, AccessCode: updateExam.AccessCode} : ex)));
   }
 
   updateExamTitle(updateExam: ExamType) {
-    this.exams.update(x => x.map(ex => (ex.examId === updateExam.examId ? {...ex, title: updateExam.title} : ex)));
+    this.exams.update(x => x.map(ex => (ex.ExamId === updateExam.ExamId ? {...ex, Title: updateExam.Title} : ex)));
   }
 
   deleteExam(examId: string) {
-    this.exams.update(exams => exams.filter(x => x.examId !== examId));
+    this.exams.update(exams => exams.filter(x => x.ExamId !== examId));
   }
 
   addQuestionToExam(examId: string, question: QuestionType) {
     this.exams.update(exams =>
-      exams.map(exam => (exam.examId === examId ? {
+      exams.map(exam => (exam.ExamId === examId ? {
         ...exam,
-        questions: exam.questions?.length ? [...exam.questions, question] : [question]
+        Questions: exam.Questions?.length ? [...exam.Questions, question] : [question]
       } : exam))
     );
   }
 
   updateQuestionContentAtExam(examId: string, question: QuestionType) {
     this.exams.update(exams =>
-      exams.map(exam => (exam.examId === examId ? {
+      exams.map(exam => (exam.ExamId === examId ? {
         ...exam,
-        questions: exam.questions.map(q => (q.questionId === question.questionId ? {
+        Questions: exam.Questions.map(q => (q.QuestionId === question.QuestionId ? {
           ...q,
-          content: question.content
+          Content: question.Content
         } : q))
       } : exam))
     );
@@ -80,20 +80,20 @@ export class ExamService {
 
   deleteQuestion(examId: string, questionId: string) {
     this.exams.update(exams =>
-      exams.map(exam => (exam.examId === examId ? {
+      exams.map(exam => (exam.ExamId === examId ? {
         ...exam,
-        questions: exam.questions.filter(q => q.questionId !== questionId)
+        Questions: exam.Questions.filter(q => q.QuestionId !== questionId)
       } : exam))
     );
   }
 
   addAnswerToQuestion(examId: string, questionId: string, answer: AnswerType) {
     this.exams.update(exams =>
-      exams.map(exam => (exam.examId === examId ? {
+      exams.map(exam => (exam.ExamId === examId ? {
         ...exam,
-        questions: exam.questions.map(q => (q.questionId === questionId ? {
+        Questions: exam.Questions.map(q => (q.QuestionId === questionId ? {
           ...q,
-          answers: [...(q.answers || []), answer]
+          Answers: [...(q.Answers || []), answer]
         } : q))
       } : exam))
     );
@@ -101,11 +101,11 @@ export class ExamService {
 
   updateAnswerWithinQuestion(examId: string, questionId: string, answer: AnswerType) {
     this.exams.update(exams =>
-      exams.map(exam => (exam.examId === examId ? {
+      exams.map(exam => (exam.ExamId === examId ? {
         ...exam,
-        questions: exam.questions.map(q => (q.questionId === questionId ? {
+        Questions: exam.Questions.map(q => (q.QuestionId === questionId ? {
           ...q,
-          answers: q.answers != undefined ? q.answers.map(a => (a.answerId === answer.answerId ? answer : a)) : undefined
+          Answers: q.Answers != undefined ? q.Answers.map(a => (a.AnswerId === answer.AnswerId ? answer : a)) : undefined
         } : q))
       } : exam))
     );
@@ -113,11 +113,11 @@ export class ExamService {
 
   deleteAnswerWithinQuestion(examId: string, questionId: string, answerId: string) {
     this.exams.update(exams =>
-      exams.map(exam => (exam.examId === examId ? {
+      exams.map(exam => (exam.ExamId === examId ? {
         ...exam,
-        questions: exam.questions.map(q => (q.questionId === questionId ? {
+        Questions: exam.Questions.map(q => (q.QuestionId === questionId ? {
           ...q,
-          answers: q.answers != undefined ? q.answers.filter(a => a.answerId != answerId) : undefined
+          Answers: q.Answers != undefined ? q.Answers.filter(a => a.AnswerId != answerId) : undefined
         } : q))
       } : exam))
     );

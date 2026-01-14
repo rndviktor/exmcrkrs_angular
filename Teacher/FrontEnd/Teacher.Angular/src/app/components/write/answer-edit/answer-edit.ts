@@ -100,7 +100,7 @@ export class AnswerEdit implements OnChanges, OnInit {
   async handleConfirmation(confirmed: boolean) {
     this.confirmVisible = false;
     if (confirmed) {
-      await this.writer.removeAnswer(this.examId!, this.questionId!, this.answer!.answerId!);
+      await this.writer.removeAnswer(this.examId!, this.questionId!, this.answer!.AnswerId!);
     } else {
       // Cancelled
       console.log('Delete cancelled');
@@ -125,8 +125,8 @@ export class AnswerEdit implements OnChanges, OnInit {
   onSubmit = async () => {
     let answer = this.form.value as AnswerType;
 
-    if (this.answer?.answerId) {
-      answer.answerId = this.answer.answerId;
+    if (this.answer?.AnswerId) {
+      answer.AnswerId = this.answer.AnswerId;
       await this.writer.updateAnswer(this.examId!, this.questionId!, answer);
     } else {
       await this.writer.addAnswer(this.examId!, this.questionId!, answer);

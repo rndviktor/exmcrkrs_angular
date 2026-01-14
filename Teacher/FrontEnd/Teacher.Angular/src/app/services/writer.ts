@@ -18,27 +18,27 @@ export class Writer {
 
   async createExam(exam: ExamType) {
     const target = `${this.baseUrl}/${this.apiPrefix}/newExam`;
-    const {id: examId} = await firstValueFrom(this.http.post<any>(target, {...exam, authorId: this.teacherId}));
-    this.examService.addExam({...exam, examId})
+    const {Id: examId} = await firstValueFrom(this.http.post<any>(target, {...exam, authorId: this.teacherId}));
+    this.examService.addExam({...exam, ExamId: examId})
   }
 
   async updateExamTitle(exam: ExamType) {
-    const target = `${this.baseUrl}/${this.apiPrefix}/editExamTitle/${exam.examId!}`;
-    await firstValueFrom(this.http.put<any>(target, {authorId: this.teacherId, title: exam.title }));
+    const target = `${this.baseUrl}/${this.apiPrefix}/editExamTitle/${exam.ExamId!}`;
+    await firstValueFrom(this.http.put<any>(target, {authorId: this.teacherId, title: exam.Title }));
     this.examService.updateExamTitle(exam);
   }
 
   async assignAccessCode(exam: ExamType) {
-    const target = `${this.baseUrl}/${this.apiPrefix}/assignAccessCode/${exam.examId!}`;
-    await firstValueFrom(this.http.put<any>(target, {authorId: this.teacherId, accessCode: exam.accessCode! }));
+    const target = `${this.baseUrl}/${this.apiPrefix}/assignAccessCode/${exam.ExamId!}`;
+    await firstValueFrom(this.http.put<any>(target, {authorId: this.teacherId, accessCode: exam.AccessCode! }));
     this.examService.updateExamAccessCode(exam)
   }
 
   async postQuestion(examId: string, question: any): Promise<any> {
     const target = `${this.baseUrl}/${this.apiPrefix}/addQuestion/${examId}`;
-    const {id} = await firstValueFrom(this.http.put<any>(target, question));
-    this.examService.addQuestionToExam(examId, {questionId: id, content: question.content});
-    return id;
+    const {Id} = await firstValueFrom(this.http.put<any>(target, question));
+    this.examService.addQuestionToExam(examId, {QuestionId: Id, Content: question.content});
+    return Id;
   }
 
   async updateQuestionContent(examId: string, question: QuestionType){
@@ -49,8 +49,8 @@ export class Writer {
 
   async addAnswer(examId: string, questionId: string, answer: AnswerType): Promise<any> {
     const target = `${this.baseUrl}/${this.apiPrefix}/addAnswer/${examId}`;
-    const {id: answerId} = await firstValueFrom(this.http.put<any>(target, { ...answer, questionId }));
-    this.examService.addAnswerToQuestion(examId, questionId, {...answer, answerId});
+    const {Id: answerId} = await firstValueFrom(this.http.put<any>(target, { ...answer, questionId }));
+    this.examService.addAnswerToQuestion(examId, questionId, {...answer, AnswerId: answerId});
   }
 
   async updateAnswer(examId: string, questionId: string, answer: AnswerType): Promise<any> {

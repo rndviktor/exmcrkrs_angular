@@ -1,19 +1,19 @@
 export interface AnswerType {
-  answerId: string | null;
-  content: string;
-  isCorrect: boolean;
+  AnswerId: string | null;
+  Content: string;
+  IsCorrect: boolean;
 }
 
 export interface QuestionType {
-  questionId: string | null | undefined;
-  content: string | null;
-  answers?: AnswerType[];
+  QuestionId: string | null | undefined;
+  Content: string | null;
+  Answers?: AnswerType[];
 }
 
 export interface ExamType {
-  examId: string | null;
-  version: number | null | undefined;
-  title: string;
-  accessCode?: string;
-  questions: QuestionType[];
+  ExamId: string | null;
+  Version: number | null | undefined;
+  Title: string;
+  AccessCode?: string;
+  Questions: QuestionType[];
 }

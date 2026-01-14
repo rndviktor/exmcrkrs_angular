@@ -41,7 +41,8 @@ import {Question} from '../question-show/question-show';
           <div class="flex flex-row justify-between bg-indigo-200">
             @if (!publishingVersion) {
               <button id="publishExam" class="bg-indigo-200 hover:bg-indigo-400 flex-none shadow-xl m-2"
-                      (click)="handlePublishClick()"> Publish exam [{{ exam.examId }} v{{ exam.version }}] to
+                      (click)="handlePublishClick()"> Publish exam [{{ exam.ExamId }} v{{ exam.Version }}]
+                to
                 students
               </button>
             } @else {
@@ -53,15 +54,15 @@ import {Question} from '../question-show/question-show';
           </div>
         </div>
       </div>
-      @if (exam && exam.questions && exam.questions.length) {
+      @if (exam && exam.Questions && exam.Questions.length) {
         <div class="flex flex-row justify-between bg-indigo-200">
           <app-access-code-edit [exam]="exam"/>
         </div>
       }
       <ul>
-        @for (question of exam.questions; track question.questionId) {
+        @for (question of exam.Questions; track question.QuestionId) {
           <li>
-            <app-question-show [question]="question" [examId]="exam.examId" (deleted)="onDeleted()"/>
+            <app-question-show [question]="question" [examId]="exam.ExamId" (deleted)="onDeleted()"/>
           </li>
         }
       </ul>
@@ -81,7 +82,7 @@ export class Exam implements OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['exam'] && this.exam && this.publishingVersion) {
-      if (this.publishingVersion !== changes['exam'].currentValue.version) {
+      if (this.publishingVersion !== changes['exam'].currentValue.Version) {
         this.publishingVersion = null;
         this.cdr.detectChanges();
       }
@@ -97,16 +98,16 @@ export class Exam implements OnDestroy, OnChanges {
   publishingMessage: string = ""
 
   addQuestionRoute = async () => {
-    await this.router.navigate(['exam', this.exam.examId, 'addQuestion']);
+    await this.router.navigate(['exam', this.exam.ExamId, 'addQuestion']);
   }
 
   async handlePublishClick() {
-    this.publishingVersion = this.exam.version!;
+    this.publishingVersion = this.exam.Version!;
     this.isPublishError = false;
-    await this.publisher.publishExam(this.exam.examId!)
+    await this.publisher.publishExam(this.exam.ExamId!)
 
     this.subscription = this.publisher
-      .observePublishingMessages(this.exam.examId!)
+      .observePublishingMessages(this.exam.ExamId!)
       .subscribe({
         next: message => {
           this.publishingMessage = message;
@@ -128,7 +129,7 @@ export class Exam implements OnDestroy, OnChanges {
   async handleConfirmation(confirmed: boolean) {
     this.confirmMainVisible = false;
     if (confirmed) {
-      await this.writer.deleteExam(this.exam.examId!);
+      await this.writer.deleteExam(this.exam.ExamId!);
       this.onDeleted();
     } else {
       // Cancelled

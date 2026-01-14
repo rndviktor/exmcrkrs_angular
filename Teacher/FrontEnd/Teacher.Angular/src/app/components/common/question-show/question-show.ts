@@ -20,19 +20,19 @@ import {QuestionType} from "../../../types";
   template: `
     <div class="p-4 bg-indigo-100">
       <div class="flex flex-row">
-        <div class="flex-1 text-gray-400 text-sm">{{ question.questionId }}</div>
+        <div class="flex-1 text-gray-400 text-sm">{{ question.QuestionId }}</div>
         <div>
           <app-pencil-button class="col-span-1 p-8" (click)="editQuestionRoute()"/>
           <app-trash-button class="col-span-1" (click)="handleDeleteCall()"/>
         </div>
       </div>
       <div class="flex flex-row">
-        <div class="whitespace-pre-line flex-1 bg-white">{{ question.content }}</div>
+        <div class="whitespace-pre-line flex-1 bg-white">{{ question.Content }}</div>
       </div>
       <ul>
-        @for (ans of question.answers; track ans.answerId; let even = $even) {
+        @for (ans of question.Answers; track ans.AnswerId; let even = $even) {
           <li [class.bg-indigo-100]="even" [class.bg-indigo-200]="!even">
-            <app-answer [answer]="ans" [examId]="examId!" [questionId]="question.questionId!"/>
+            <app-answer [answer]="ans" [examId]="examId!" [questionId]="question.QuestionId!"/>
           </li>
         }
       </ul>
@@ -62,7 +62,7 @@ export class Question {
   async handleConfirmation(confirmed: boolean) {
     this.confirmQuestionVisible = false;
     if (confirmed) {
-      await this.writer.removeQuestion(this.examId!, this.question.questionId!);
+      await this.writer.removeQuestion(this.examId!, this.question.QuestionId!);
       this.onDeleted();
     } else {
       // Cancelled
@@ -71,6 +71,6 @@ export class Question {
   }
 
   editQuestionRoute = async () => {
-    await this.router.navigate(['exam', this.examId, 'editQuestion', this.question.questionId]);
+    await this.router.navigate(['exam', this.examId, 'editQuestion', this.question.QuestionId]);
   }
 }

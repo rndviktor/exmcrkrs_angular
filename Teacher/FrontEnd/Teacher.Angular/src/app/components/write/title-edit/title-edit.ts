@@ -26,7 +26,7 @@ import {ExamType} from "../../../types";
       <input class="text-3xl disabled:text-indigo-400 font-bold px-3 md:placeholder-gray-400 flex-1"
              id="titleEd" name="titleEd"
              type="text"
-             formControlName="title"
+             formControlName="Title"
              placeholder="Title"/>
       @if (isDisabled) {
         <div
@@ -50,32 +50,32 @@ export class TitleEdit implements OnChanges, OnInit {
 
   constructor(private writer: Writer, private fb: FormBuilder) {
     this.form = this.fb.group({
-      title: [{value: '', disabled: true}, Validators.required]
+      Title: [{value: '', disabled: true}, Validators.required]
     })
   }
 
   ngOnInit(): void {
-    if (!this.exam?.examId) {
+    if (!this.exam?.ExamId) {
       this.toggleMode();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['exam'] && this.exam) {
-      this.form.patchValue({title: this.exam.title});
+      this.form.patchValue({Title: this.exam.Title});
     }
   }
 
   toggleMode = () => {
     this.isDisabled = !this.isDisabled;
-    this.isDisabled ? this.form.get('title')?.disable() : this.form.get('title')?.enable()
+    this.isDisabled ? this.form.get('Title')?.disable() : this.form.get('Title')?.enable()
   }
 
   async onSubmit() {
     let exam = this.form.value as ExamType;
 
-    if (this.exam?.examId) {
-      exam.examId = this.exam.examId;
+    if (this.exam?.ExamId) {
+      exam.ExamId = this.exam.ExamId;
       await this.writer.updateExamTitle(exam);
       this.toggleMode()
     } else {
