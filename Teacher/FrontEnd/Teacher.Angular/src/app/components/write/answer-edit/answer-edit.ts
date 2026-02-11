@@ -33,16 +33,16 @@ import {PencilButton} from '../../common/iconed/pencil-button';
       <div class="flex flex-row justify-between flex-1">
         <div class="flex flex-1 justify-items-start">
           <div class="flex items-center space-x-2 px-4">
-            <input type="checkbox" id="isCorrect" formControlName="isCorrect"
+            <input type="checkbox" id="IsCorrect" formControlName="IsCorrect"
                    class="w-5 h-5 border-gray-300 rounded focus:ring-2 disabled:text-gray-400 focus:ring-blue-500"/>
-            <label for="isCorrect" class="text-gray-600 select-none">
+            <label for="IsCorrect" class="text-gray-600 select-none">
               Is Correct?
             </label>
           </div>
           <textarea class="flex-1 px-3 md:placeholder-gray-400 disabled:text-gray-400 wrap-break-word select-none"
                     #contentDiv id="contentEd" type="text" name="contentEd"
                     [style.height.px]="dynamicHeight" (input)="autoResize($event)"
-                    formControlName="content" placeholder="Content"> </textarea>
+                    formControlName="Content" placeholder="Content"> </textarea>
         </div>
         @if (isDisabled) {
           <app-pencil-button (click)="toggleMode()"/>
@@ -74,8 +74,8 @@ export class AnswerEdit implements OnChanges, OnInit {
 
   constructor(private writer: Writer, private fb: FormBuilder) {
     this.form = this.fb.group({
-      content: [{value: '', disabled: true}, Validators.required],
-      isCorrect: [{value: false, disabled: true}, Validators.required],
+      Content: [{value: '', disabled: true}, Validators.required],
+      IsCorrect: [{value: false, disabled: true}, Validators.required],
     })
   }
 
@@ -109,8 +109,8 @@ export class AnswerEdit implements OnChanges, OnInit {
 
   toggleMode = () => {
     this.isDisabled = !this.isDisabled;
-    this.isDisabled ? this.form.get('content')?.disable() : this.form.get('content')?.enable();
-    this.isDisabled ? this.form.get('isCorrect')?.disable() : this.form.get('isCorrect')?.enable()
+    this.isDisabled ? this.form.get('Content')?.disable() : this.form.get('Content')?.enable();
+    this.isDisabled ? this.form.get('IsCorrect')?.disable() : this.form.get('IsCorrect')?.enable()
   }
 
   ngOnChanges(changes: SimpleChanges) {
