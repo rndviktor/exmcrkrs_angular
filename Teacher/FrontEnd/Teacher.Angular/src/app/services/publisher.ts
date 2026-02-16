@@ -2,24 +2,23 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {firstValueFrom, Observable} from 'rxjs';
 import {ExamService} from './exam-service';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Publisher {
-  private teacherId: string = '330125ae-bdc8-44a1-a90c-aa293445be3e';
-  private baseUrl: string = 'http://localhost:5012';
   private apiEndpoint: string = 'api/v1';
 
   constructor(private http: HttpClient, private examService: ExamService) {}
   async publishExam(examId: string) {
-    const target = `${this.baseUrl}/${this.apiEndpoint}/publish/${examId}`;
-    await firstValueFrom(this.http.post<any>(target, { authorId: this.teacherId}));
+    const target = `${environment.publisherUrl}/${this.apiEndpoint}/publish/${examId}`;
+    await firstValueFrom(this.http.post<any>(target, { authorId: environment.teacherId}));
     this.examService.resetAccessCode(examId)
   }
 
   observePublishingMessages(examId: string): Observable<string> {
-    const url = `${this.baseUrl}/${this.apiEndpoint}/publish/${examId}/stream`
+    const url = `${environment.publisherUrl}/${this.apiEndpoint}/publish/${examId}/stream`
 
     return new Observable<string>(observer => {
       const eventSource = new EventSource(url);
