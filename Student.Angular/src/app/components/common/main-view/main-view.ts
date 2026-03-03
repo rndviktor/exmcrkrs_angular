@@ -56,7 +56,7 @@ export class MainView implements OnDestroy {
   errorMessage: string | null | undefined;
   startExamId: string | null | undefined;
 
-  tabs = ['Exams', 'Submissions'];
+  tabs = ['Exams', 'Submissions2'];
   activeTab = this.tabs[0];
 
   selectTab = (tab: string) => {
