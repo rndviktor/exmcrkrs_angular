@@ -6,7 +6,6 @@ import {Router} from '@angular/router';
 import {Writer} from '../../../services/writer';
 import {ExamSelect} from '../exam-select/exam-select';
 import {SubmissionsView} from '../submissions-view/submissions-view';
-import {SubmissionTracker} from '../../../services/submission-tracker';
 import {PaymentConfirmation} from '../payment-confirmation/payment-confirmation';
 import {environment} from '../../../../environments/environment';
 
@@ -66,12 +65,12 @@ export class MainView implements OnDestroy {
   storedSubmissions = false
   exams: ExamType[] = [];
 
-  constructor(private reader: Reader, private router: Router, private writer: Writer, private submissionTracker: SubmissionTracker) {
+  constructor(private reader: Reader, private router: Router, private writer: Writer) {
     this.handleListUpdate()
   }
 
   handleListUpdate() {
-    this.reader.getData(this.submissionTracker.getExamFinishingAndResetTheFlag())
+    this.reader.getData()
       .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
         console.log('received', data);

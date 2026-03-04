@@ -11,12 +11,8 @@ export class Reader {
   private apiEndpoint: string = '/api/v1/';
   constructor(private http: HttpClient) {}
 
-  getData(ignoreSubmission = false): Observable<any> {
-    var queryEnd = '';
-    if (ignoreSubmission) {
-      queryEnd = '?ignoreSubmissions=true'
-    }
-    return this.http.get<any>(`${environment.studentQueryUrl}${this.apiEndpoint}examView/${this.studentId}${queryEnd}`);
+  getData(): Observable<any> {
+    return this.http.get<any>(`${environment.studentQueryUrl}${this.apiEndpoint}examView/${this.studentId}`);
   }
 
   getQuestion(submissionId: string, questionId: string): Observable<any> {

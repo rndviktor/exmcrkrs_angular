@@ -113,7 +113,7 @@ export class Question implements OnInit {
   async navigateNextQuestion() {
     await this.syncWithBackEndAnswersSelection();
     if (!this.data?.Question.NextQuestionId) {
-      await this.router.navigate(['/']);
+      setTimeout(() => {this.router.navigate(['/']);}, 500)
     } else {
       await this.router.navigate([this.submissionId, 'question', this.data?.Question.NextQuestionId!]);
     }
