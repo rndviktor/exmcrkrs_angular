@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ExamType} from '../../../types';
+import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
+import { ExamType } from '../../../types';
 
 @Component({
   selector: 'app-exam-select',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `
     <div class="p-4 bg-indigo-100">

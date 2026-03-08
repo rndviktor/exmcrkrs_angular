@@ -1,17 +1,18 @@
-import {Component, OnDestroy} from '@angular/core';
-import {Subject, takeUntil} from 'rxjs';
-import {ExamType, PaymentConfirmationSubmission} from '../../../types';
-import {Reader} from '../../../services/reader';
-import {Router} from '@angular/router';
-import {Writer} from '../../../services/writer';
-import {ExamSelect} from '../exam-select/exam-select';
-import {SubmissionsView} from '../submissions-view/submissions-view';
-import {PaymentConfirmation} from '../payment-confirmation/payment-confirmation';
-import {environment} from '../../../../environments/environment';
-import {SubmissionTracker} from '../../../services/submission-tracker';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { ExamType, PaymentConfirmationSubmission } from '../../../types';
+import { Reader } from '../../../services/reader';
+import { Router } from '@angular/router';
+import { Writer } from '../../../services/writer';
+import { ExamSelect } from '../exam-select/exam-select';
+import { SubmissionsView } from '../submissions-view/submissions-view';
+import { PaymentConfirmation } from '../payment-confirmation/payment-confirmation';
+import { environment } from '../../../../environments/environment';
+import { SubmissionTracker } from '../../../services/submission-tracker';
 
 @Component({
   selector: 'app-main-view',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ExamSelect,
     SubmissionsView,
@@ -77,11 +78,11 @@ export class MainView implements OnDestroy {
         console.log('received', data);
         if (data) {
           if (!this.submissionTracker.getQuestionNavigatedFlag() && data.ExamInProcess) {
-            const {ExamSubmissionId, QuestionId} = data.ExamInProcess;
+            const { ExamSubmissionId, QuestionId } = data.ExamInProcess;
             this.router.navigate([ExamSubmissionId, 'question', QuestionId])
           }
           this.exams = data.Exams.map((item: any) => {
-            return {...item, composeKey: `${item.examId}_${item.version}`}
+            return { ...item, composeKey: `${item.examId}_${item.version}` }
           });
           this.storedSubmissions = data.StoredSubmissions;
         } else {
@@ -94,7 +95,7 @@ export class MainView implements OnDestroy {
   startExam(examIdSubmit: string) {
     const ex = this.exams.find(x => x.ExamId === examIdSubmit);
     if (ex) {
-      const {ExamId} = ex
+      const { ExamId } = ex
       this.startExamId = ExamId;
       if (environment.studentCmdUrl) {
         this.submitCode();

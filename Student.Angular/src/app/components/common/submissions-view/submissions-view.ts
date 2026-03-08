@@ -1,9 +1,9 @@
-import {Component, OnDestroy} from '@angular/core';
-import {Reader} from '../../../services/reader';
-import {Subject, takeUntil} from 'rxjs';
-import {ExamSubmissionsViewModel, ExamSubmissionType, formatDateTime, QuestionViewModel} from '../../../types';
-import {Submission} from '../submission/submission';
-import {Evaluator} from '../../../services/evaluator';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Reader } from '../../../services/reader';
+import { Subject, takeUntil } from 'rxjs';
+import { ExamSubmissionsViewModel, ExamSubmissionType, formatDateTime, QuestionViewModel } from '../../../types';
+import { Submission } from '../submission/submission';
+import { Evaluator } from '../../../services/evaluator';
 
 const scorePercentString = (score: number) => {
   const percent = score * 100;
@@ -13,6 +13,7 @@ const scorePercentString = (score: number) => {
 
 @Component({
   selector: 'app-submissions-view',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     Submission
   ],
@@ -79,7 +80,7 @@ export class SubmissionsView implements OnDestroy {
     return this.openedIndex === index;
   }
 
-  getSvgId(index: string):string {
+  getSvgId(index: string): string {
     return `SVG_${index}`;
   }
 

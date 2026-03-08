@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AnswerType} from '../../../types';
-import {Checkbox, SelectionChangedEvent} from '../checkbox/checkbox';
+import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
+import { AnswerType } from '../../../types';
+import { Checkbox, SelectionChangedEvent } from '../checkbox/checkbox';
 
 @Component({
   selector: 'app-answer',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     Checkbox
   ],

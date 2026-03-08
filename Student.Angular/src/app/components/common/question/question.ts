@@ -1,15 +1,16 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Reader} from '../../../services/reader';
-import {ActivatedRoute, Router} from '@angular/router';
-import {switchMap} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {extractBodyContent, QuestionSubmissionSelection, QuestionViewModel} from '../../../types';
-import {Answer} from '../answer/answer';
-import {SelectionChangedEvent} from '../checkbox/checkbox';
-import {Writer} from '../../../services/writer';
+import { Component, ChangeDetectionStrategy, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Reader } from '../../../services/reader';
+import { ActivatedRoute, Router } from '@angular/router';
+import { switchMap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { extractBodyContent, QuestionSubmissionSelection, QuestionViewModel } from '../../../types';
+import { Answer } from '../answer/answer';
+import { SelectionChangedEvent } from '../checkbox/checkbox';
+import { Writer } from '../../../services/writer';
 
 @Component({
   selector: 'app-question',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     Answer
   ],
@@ -73,11 +74,11 @@ export class Question implements OnInit {
           this.editedAnswers = new Set();
         }
         this.http.get(`http://localhost:8080/assets/${item.Question.ContentUrl}`,
-          {responseType: 'text'}).subscribe(
-          dat => {
-            this.content = extractBodyContent(dat)
-          }
-        )
+          { responseType: 'text' }).subscribe(
+            dat => {
+              this.content = extractBodyContent(dat)
+            }
+          )
       }
     });
   }

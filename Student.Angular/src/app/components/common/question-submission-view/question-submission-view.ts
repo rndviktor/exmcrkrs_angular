@@ -1,8 +1,9 @@
-import {Component, Input} from '@angular/core';
-import {QuestionCorrectness, QuestionSubmissionSelection, QuestionType} from '../../../types';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { QuestionCorrectness, QuestionSubmissionSelection, QuestionType } from '../../../types';
 
 @Component({
   selector: 'app-question-submission-view',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `
     @if (content) {
@@ -44,11 +45,11 @@ export class QuestionSubmissionView {
   @Input() content: string | null = null;
   @Input() questionCorrectness?: QuestionCorrectness;
 
-  isChecked(answerId: string){
-    return this.selection?.SelectedAnswers.find(x => x == answerId) != null? 'True' : '';
+  isChecked(answerId: string) {
+    return this.selection?.SelectedAnswers.find(x => x == answerId) != null ? 'True' : '';
   }
 
-  isCorrect(answerId: string){
+  isCorrect(answerId: string) {
     return this.questionCorrectness?.Answers.find(x => x.AnswerId == answerId)?.IsCorrect ? 'True' : '';
   }
 }

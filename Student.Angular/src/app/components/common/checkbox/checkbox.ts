@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 export interface SelectionChangedEvent {
   id: string;
@@ -7,6 +7,7 @@ export interface SelectionChangedEvent {
 }
 @Component({
   selector: 'app-checkbox',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule
   ],
@@ -28,6 +29,6 @@ export class Checkbox {
   @Output() checkedChange: EventEmitter<SelectionChangedEvent> = new EventEmitter<SelectionChangedEvent>();
 
   change(value: any) {
-    this.checkedChange.emit({id: this.id, checked: value});
+    this.checkedChange.emit({ id: this.id, checked: value });
   }
 }

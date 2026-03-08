@@ -1,5 +1,6 @@
 import {
   Component,
+  ChangeDetectionStrategy,
   ElementRef,
   EventEmitter,
   Input,
@@ -8,12 +9,13 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {loadStripe, Stripe, StripeCardElement} from '@stripe/stripe-js';
-import {PaymentConfirmationSubmission} from '../../../types';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { loadStripe, Stripe, StripeCardElement } from '@stripe/stripe-js';
+import { PaymentConfirmationSubmission } from '../../../types';
 
 @Component({
   selector: 'app-payment-confirmation',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule
@@ -106,7 +108,7 @@ export class PaymentConfirmation implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['code'] && this.code) {
-      this.form.patchValue({code: this.code});
+      this.form.patchValue({ code: this.code });
       this.form.markAsPristine();
     }
     setTimeout(async () => {
@@ -137,7 +139,7 @@ export class PaymentConfirmation implements OnChanges, OnDestroy {
         return;
       }
       this.formDisabled = true; // disable submit button on submit
-      const {paymentMethod, error} = await this.stripe.createPaymentMethod({
+      const { paymentMethod, error } = await this.stripe.createPaymentMethod({
         type: 'card',
         card: this.card,
       });
@@ -145,7 +147,7 @@ export class PaymentConfirmation implements OnChanges, OnDestroy {
       if (error) {
         this.cardErrors = error?.message || null;
       } else {
-        const {id} = paymentMethod!
+        const { id } = paymentMethod!
         endRes.PaymentMethodId = id;
       }
     } else if (this.form.valid) {
@@ -155,7 +157,7 @@ export class PaymentConfirmation implements OnChanges, OnDestroy {
     }
 
     this.confirmed.emit(endRes);
-    this.form.setValue({code: ''})
+    this.form.setValue({ code: '' })
     this.card.destroy();
     this.onCancel()
   }

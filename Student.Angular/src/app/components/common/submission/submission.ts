@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {
   ExamSubmissionsViewModel,
   extractBodyContent, QuestionCorrectness,
@@ -6,12 +6,12 @@ import {
   QuestionType,
   QuestionViewModel
 } from '../../../types';
-import {QuestionSubmissionView} from '../question-submission-view/question-submission-view';
-import {HttpClient} from '@angular/common/http';
-import {filter} from 'rxjs';
+import { QuestionSubmissionView } from '../question-submission-view/question-submission-view';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-submission',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     QuestionSubmissionView
   ],
@@ -51,7 +51,7 @@ import {filter} from 'rxjs';
 export class Submission {
   @Input() submission!: ExamSubmissionsViewModel;
   @Input() question?: QuestionViewModel;
-  content: string|null=null;
+  content: string | null = null;
 
   openedIndex: string | null = null;
 
@@ -63,7 +63,7 @@ export class Submission {
     this.getStaticContent().then(content => this.content = content);
   }
 
-  getScoreString(questionId: string): string|undefined {
+  getScoreString(questionId: string): string | undefined {
     return this.question?.Submissions.find(x => x.QuestionId == questionId)?.ScoreString
   }
 
@@ -78,15 +78,15 @@ export class Submission {
     return null;
   }
 
-  getQuestion(): QuestionType|undefined {
+  getQuestion(): QuestionType | undefined {
     return this.openedIndex !== null ? this.submission.Exam.Questions?.find(x => x.QuestionId === this.openedIndex) : undefined;
   }
 
-  getSelection(): QuestionSubmissionSelection|undefined {
+  getSelection(): QuestionSubmissionSelection | undefined {
     return this.openedIndex !== null ? this.submission.ExamSubmission.QuestionsSubmissions?.find(x => x.QuestionId === this.openedIndex) : undefined;
   }
 
-  getQuestionCorrectness(): QuestionCorrectness|undefined {
+  getQuestionCorrectness(): QuestionCorrectness | undefined {
     return this.openedIndex !== null ? this.question?.Questions.find(x => x.QuestionId == this.openedIndex) : undefined;
   }
 
