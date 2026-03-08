@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -21,7 +20,6 @@ import { PencilButton } from '../../common/iconed/pencil-button';
 
 @Component({
   selector: 'app-answer-edit',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     CheckIconComponent,

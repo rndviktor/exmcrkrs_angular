@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   Component, ElementRef,
   EventEmitter,
   Input,
@@ -12,7 +11,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 @Component({
   selector: 'app-content-editor-form',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, FormsModule],
   template: `<div class="flex flex-col p-8 ">
     <form class="flex flex-col" [formGroup]="form" (ngSubmit)="onSubmit()" >
@@ -40,11 +38,13 @@ export class ContentEditorFormComponent implements OnChanges {
     if (this.contentDiv) {
       setTimeout(() => {
         this.dynamicHeight = this.contentDiv.nativeElement.scrollHeight;
+        console.log('--updated--', this.dynamicHeight)
       }, 0);
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('---ngOnChanges')
     if (changes['content'] && this.content) {
       setTimeout(() => {
         this.form.patchValue({ content: this.content });
@@ -60,6 +60,7 @@ export class ContentEditorFormComponent implements OnChanges {
   }
 
   autoResize(event: Event) {
+    console.log('auto-resize', event);
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto'; // reset height
     textarea.style.height = `${textarea.scrollHeight}px`; // set height based on scrollHeight
