@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -9,17 +10,18 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {Writer} from '../../../services/writer';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {CheckIconComponent} from '../../common/iconed/check-button';
-import {XButton} from '../../common/iconed/x-button';
-import {AnswerType} from "../../../types";
-import {TrashButton} from '../../common/iconed/trash-button';
-import {Confirmation} from '../../common/confirmation/confirmation';
-import {PencilButton} from '../../common/iconed/pencil-button';
+import { Writer } from '../../../services/writer';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CheckIconComponent } from '../../common/iconed/check-button';
+import { XButton } from '../../common/iconed/x-button';
+import { AnswerType } from "../../../types";
+import { TrashButton } from '../../common/iconed/trash-button';
+import { Confirmation } from '../../common/confirmation/confirmation';
+import { PencilButton } from '../../common/iconed/pencil-button';
 
 @Component({
   selector: 'app-answer-edit',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     CheckIconComponent,
@@ -74,8 +76,8 @@ export class AnswerEdit implements OnChanges, OnInit {
 
   constructor(private writer: Writer, private fb: FormBuilder) {
     this.form = this.fb.group({
-      Content: [{value: '', disabled: true}, Validators.required],
-      IsCorrect: [{value: false, disabled: true}, Validators.required],
+      Content: [{ value: '', disabled: true }, Validators.required],
+      IsCorrect: [{ value: false, disabled: true }, Validators.required],
     })
   }
 
@@ -116,7 +118,7 @@ export class AnswerEdit implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['answer'] && this.answer) {
       setTimeout(() => {
-        this.form.patchValue({...this.answer});
+        this.form.patchValue({ ...this.answer });
         this.updateHeight();
       })
     }

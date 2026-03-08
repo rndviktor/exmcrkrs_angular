@@ -1,15 +1,16 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {Answer} from '../answer/answer';
-import {PencilButton} from '../iconed/pencil-button';
-import {Router} from '@angular/router';
-import {Confirmation} from '../confirmation/confirmation';
-import {Writer} from '../../../services/writer';
-import {TrashButton} from '../iconed/trash-button';
-import {QuestionType} from "../../../types";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Answer } from '../answer/answer';
+import { PencilButton } from '../iconed/pencil-button';
+import { Router } from '@angular/router';
+import { Confirmation } from '../confirmation/confirmation';
+import { Writer } from '../../../services/writer';
+import { TrashButton } from '../iconed/trash-button';
+import { QuestionType } from "../../../types";
 
 @Component({
   selector: 'app-question-show',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     Answer,

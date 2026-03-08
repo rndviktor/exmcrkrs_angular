@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-x-button',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `<button
     class="inline-flex items-center px-0.5 mx-0.5 py-1.5 bg-transparent disabled:bg-indigo-100 hover:text-red-600 text-gray-500 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -15,4 +16,4 @@ import {Component} from '@angular/core';
   </button>
 `
 })
-export class XButton {}
+export class XButton { }

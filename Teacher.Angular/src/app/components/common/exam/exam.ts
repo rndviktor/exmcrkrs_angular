@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -8,20 +9,21 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {Router} from '@angular/router';
-import {Confirmation} from '../confirmation/confirmation';
-import {Writer} from '../../../services/writer';
-import {TrashButton} from '../iconed/trash-button';
-import {TitleEdit} from '../../write/title-edit/title-edit';
-import {Publisher} from '../../../services/publisher';
-import {Subscription} from 'rxjs';
-import {ExamType} from "../../../types";
-import {AccessCodeEdit} from '../../write/access-code-edit/access-code-edit';
-import {Question} from '../question-show/question-show';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { Confirmation } from '../confirmation/confirmation';
+import { Writer } from '../../../services/writer';
+import { TrashButton } from '../iconed/trash-button';
+import { TitleEdit } from '../../write/title-edit/title-edit';
+import { Publisher } from '../../../services/publisher';
+import { Subscription } from 'rxjs';
+import { ExamType } from "../../../types";
+import { AccessCodeEdit } from '../../write/access-code-edit/access-code-edit';
+import { Question } from '../question-show/question-show';
 
 @Component({
   selector: 'app-exam',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     Question,
     CommonModule,
@@ -114,7 +116,7 @@ export class Exam implements OnDestroy, OnChanges {
           this.isPublishError = message.startsWith("Err:")
           this.cdr.detectChanges();
         },
-        error: message => {console.error('publish SSE error', message)}
+        error: message => { console.error('publish SSE error', message) }
       });
   }
 

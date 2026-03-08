@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -6,14 +7,15 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Writer} from '../../../services/writer';
-import {CheckIconComponent} from '../../common/iconed/check-button';
-import {XButton} from '../../common/iconed/x-button';
-import {ExamType} from "../../../types";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Writer } from '../../../services/writer';
+import { CheckIconComponent } from '../../common/iconed/check-button';
+import { XButton } from '../../common/iconed/x-button';
+import { ExamType } from "../../../types";
 
 @Component({
   selector: 'app-title-edit',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -50,7 +52,7 @@ export class TitleEdit implements OnChanges, OnInit {
 
   constructor(private writer: Writer, private fb: FormBuilder) {
     this.form = this.fb.group({
-      Title: [{value: '', disabled: true}, Validators.required]
+      Title: [{ value: '', disabled: true }, Validators.required]
     })
   }
 
@@ -62,7 +64,7 @@ export class TitleEdit implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['exam'] && this.exam) {
-      this.form.patchValue({Title: this.exam.Title});
+      this.form.patchValue({ Title: this.exam.Title });
     }
   }
 

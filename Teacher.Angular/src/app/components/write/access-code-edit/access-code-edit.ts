@@ -1,13 +1,14 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {CheckIconComponent} from '../../common/iconed/check-button';
-import {XButton} from '../../common/iconed/x-button';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ExamType} from '../../../types';
-import {Writer} from '../../../services/writer';
-import {PencilButton} from '../../common/iconed/pencil-button';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { CheckIconComponent } from '../../common/iconed/check-button';
+import { XButton } from '../../common/iconed/x-button';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ExamType } from '../../../types';
+import { Writer } from '../../../services/writer';
+import { PencilButton } from '../../common/iconed/pencil-button';
 
 @Component({
   selector: 'app-access-code-edit',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckIconComponent,
     XButton,
@@ -43,20 +44,20 @@ export class AccessCodeEdit implements OnChanges {
 
   isDisabled: boolean = true;
   toggleMode = () => {
-    this.form.patchValue({AccessCode: this.exam!.AccessCode});
+    this.form.patchValue({ AccessCode: this.exam!.AccessCode });
     this.isDisabled = !this.isDisabled;
     this.isDisabled ? this.form.get('AccessCode')?.disable() : this.form.get('AccessCode')?.enable()
   }
 
   constructor(private writer: Writer, private fb: FormBuilder,) {
     this.form = this.fb.group({
-      AccessCode: [{value: '', disabled: true}, Validators.required]
+      AccessCode: [{ value: '', disabled: true }, Validators.required]
     })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['exam'] && this.exam) {
-      this.form.patchValue({AccessCode: this.exam.AccessCode});
+      this.form.patchValue({ AccessCode: this.exam.AccessCode });
     }
   }
 

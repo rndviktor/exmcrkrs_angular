@@ -1,17 +1,18 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, Signal} from '@angular/core';
-import {ContentEditorFormComponent} from './contentEditorForm';
-import {Writer} from '../../../services/writer';
-import {ActivatedRoute, Router} from '@angular/router';
-import {HomeButton} from '../../common/iconed/home-button';
-import {Confirmation} from '../../common/confirmation/confirmation';
-import {AnswerEdit} from '../answer-edit/answer-edit';
-import {TrashButton} from '../../common/iconed/trash-button';
-import {Subscription} from 'rxjs';
-import {QuestionType} from "../../../types";
-import {ExamService} from '../../../services/exam-service';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Signal } from '@angular/core';
+import { ContentEditorFormComponent } from './contentEditorForm';
+import { Writer } from '../../../services/writer';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HomeButton } from '../../common/iconed/home-button';
+import { Confirmation } from '../../common/confirmation/confirmation';
+import { AnswerEdit } from '../answer-edit/answer-edit';
+import { TrashButton } from '../../common/iconed/trash-button';
+import { Subscription } from 'rxjs';
+import { QuestionType } from "../../../types";
+import { ExamService } from '../../../services/exam-service';
 
 @Component({
   selector: 'app-question-edit',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ContentEditorFormComponent, HomeButton, Confirmation, AnswerEdit, TrashButton],
   template: `
       <div class="flex flex-col p-8 ">
@@ -92,7 +93,7 @@ export class QuestionEdit implements OnInit, OnDestroy {
     })
   }
 
-  routeHome = async ()=> {
+  routeHome = async () => {
     await this.router.navigate(['/']);
   }
 
@@ -110,12 +111,12 @@ export class QuestionEdit implements OnInit, OnDestroy {
   }
 
   async handleContentSubmit(data: { content: string | null }) {
-    const {content} = data;
+    const { content } = data;
     if (this.editMode) {
-      const question = {QuestionId: this.questionId, Content: content};
+      const question = { QuestionId: this.questionId, Content: content };
       await this.writer.updateQuestionContent(this.examId!, question)
     } else {
-      const id = await this.writer.postQuestion(this.examId!, {content: content!});
+      const id = await this.writer.postQuestion(this.examId!, { content: content! });
       await this.router.navigate(['exam', this.examId, 'editQuestion', id]);
     }
   }

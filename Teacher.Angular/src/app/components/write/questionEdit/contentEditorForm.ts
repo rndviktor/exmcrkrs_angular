@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component, ElementRef,
   EventEmitter,
   Input,
@@ -7,10 +8,11 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-content-editor-form',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, FormsModule],
   template: `<div class="flex flex-col p-8 ">
     <form class="flex flex-col" [formGroup]="form" (ngSubmit)="onSubmit()" >
@@ -45,13 +47,13 @@ export class ContentEditorFormComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['content'] && this.content) {
       setTimeout(() => {
-        this.form.patchValue({content: this.content});
+        this.form.patchValue({ content: this.content });
         this.updateHeight();
       })
     }
   }
 
-  @Output() submitForm = new EventEmitter<{ content: string|null }>();
+  @Output() submitForm = new EventEmitter<{ content: string | null }>();
 
   onSubmit() {
     this.submitForm.emit({ content: this.form.value.content });

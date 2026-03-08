@@ -1,8 +1,9 @@
-import {Component, Input} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-checkbox',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule
   ],
@@ -22,5 +23,5 @@ import {FormsModule} from '@angular/forms';
 export class CheckboxComponent {
   @Input() checked: boolean = false;
   @Input() disabled: boolean = false;
-  @Input() id: string|number|null|undefined;
+  @Input() id: string | number | null | undefined;
 }

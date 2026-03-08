@@ -1,7 +1,8 @@
-import {Component, Input} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-trash-button',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
   template: `<button
     class="inline-flex items-center px-0.5 mx-0.5 py-1.5 bg-transparent hover:text-red-600 text-gray-500 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
