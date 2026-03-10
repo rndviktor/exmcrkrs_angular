@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ExamType, PaymentConfirmationSubmission } from '../../../types';
 import { Reader } from '../../../services/reader';
@@ -12,7 +12,6 @@ import { SubmissionTracker } from '../../../services/submission-tracker';
 
 @Component({
   selector: 'app-main-view',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ExamSelect,
     SubmissionsView,
