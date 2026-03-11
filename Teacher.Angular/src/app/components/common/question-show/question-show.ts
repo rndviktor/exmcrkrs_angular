@@ -10,7 +10,6 @@ import { QuestionType } from "../../../types";
 
 @Component({
   selector: 'app-question-show',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     Answer,

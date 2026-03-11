@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Signal } from '@angular/core';
 import { ContentEditorFormComponent } from './contentEditorForm';
 import { Writer } from '../../../services/writer';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,6 @@ import { ExamService } from '../../../services/exam-service';
 
 @Component({
   selector: 'app-question-edit',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ContentEditorFormComponent, HomeButton, Confirmation, AnswerEdit, TrashButton],
   template: `
       <div class="flex flex-col p-8 ">

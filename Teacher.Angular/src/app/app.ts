@@ -4,7 +4,6 @@ import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   hostDirectives: [],
   template: `
