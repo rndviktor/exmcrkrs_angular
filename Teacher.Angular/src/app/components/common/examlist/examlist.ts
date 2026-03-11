@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Exam } from '../exam/exam';
 import { TitleEdit } from '../../write/title-edit/title-edit';
 import { ExamService } from '../../../services/exam-service';
 
 @Component({
   selector: 'app-examlist',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     Exam,
     TitleEdit,

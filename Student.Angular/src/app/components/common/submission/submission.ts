@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {
   ExamSubmissionsViewModel,
   extractBodyContent, QuestionCorrectness,
@@ -11,7 +11,6 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-submission',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     QuestionSubmissionView
   ],

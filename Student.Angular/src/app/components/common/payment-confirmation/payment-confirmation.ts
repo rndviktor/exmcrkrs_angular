@@ -1,6 +1,5 @@
 import {
   Component,
-  ChangeDetectionStrategy,
   ElementRef,
   EventEmitter,
   Input,
@@ -15,7 +14,6 @@ import { PaymentConfirmationSubmission } from '../../../types';
 
 @Component({
   selector: 'app-payment-confirmation',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule

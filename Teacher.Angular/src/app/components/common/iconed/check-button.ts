@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-check',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<button
     class="inline-flex items-center px-0.5 mx-0.5 py-1.5 bg-transparent disabled:text-gray-400  hover:bg-indigo-400 text-gray-600 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
     aria-label="Edit"

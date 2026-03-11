@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Reader } from '../../../services/reader';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
@@ -10,7 +10,6 @@ import { Writer } from '../../../services/writer';
 
 @Component({
   selector: 'app-question',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     Answer
   ],
@@ -60,7 +59,7 @@ export class Question implements OnInit {
       switchMap(params => {
         this.submissionId = params.get('submissionId');
         this.questionId = params.get('questionId');
-        return this.reader.getQuestion(this.submissionId!, this.questionId!);
+        return this.reader.getQuestion(this.submissionId!, this.questionId);
       })
     ).subscribe({
       next: (item: any) => {
@@ -85,7 +84,7 @@ export class Question implements OnInit {
 
   async submitAnswersSelection() {
     const selection = {
-      QuestionId: this.questionId!,
+      QuestionId: this.data?.Question.QuestionId,
       SelectedAnswers: Array.from(this.editedAnswers)
     } as QuestionSubmissionSelection;
     if (this.storedAnswers.size > 0) {

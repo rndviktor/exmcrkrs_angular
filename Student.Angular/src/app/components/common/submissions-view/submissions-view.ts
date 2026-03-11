@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Reader } from '../../../services/reader';
 import { Subject, takeUntil } from 'rxjs';
 import { ExamSubmissionsViewModel, ExamSubmissionType, formatDateTime, QuestionViewModel } from '../../../types';
@@ -13,7 +13,6 @@ const scorePercentString = (score: number) => {
 
 @Component({
   selector: 'app-submissions-view',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     Submission
   ],

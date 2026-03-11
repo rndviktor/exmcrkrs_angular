@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -23,7 +22,6 @@ import { Question } from '../question-show/question-show';
 
 @Component({
   selector: 'app-exam',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     Question,
     CommonModule,

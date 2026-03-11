@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CheckIconComponent } from '../../common/iconed/check-button';
 import { XButton } from '../../common/iconed/x-button';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,7 +8,6 @@ import { PencilButton } from '../../common/iconed/pencil-button';
 
 @Component({
   selector: 'app-access-code-edit',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckIconComponent,
     XButton,

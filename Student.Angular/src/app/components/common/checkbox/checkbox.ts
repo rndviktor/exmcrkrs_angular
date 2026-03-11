@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 export interface SelectionChangedEvent {
@@ -7,7 +7,6 @@ export interface SelectionChangedEvent {
 }
 @Component({
   selector: 'app-checkbox',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule
   ],

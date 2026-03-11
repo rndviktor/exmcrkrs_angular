@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-checkbox',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule
   ],

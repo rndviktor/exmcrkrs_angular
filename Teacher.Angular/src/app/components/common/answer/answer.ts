@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CheckboxComponent } from '../iconed/checkbox';
 import { AnswerType } from "../../../types";
 
 @Component({
   selector: 'app-answer',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckboxComponent
   ],
