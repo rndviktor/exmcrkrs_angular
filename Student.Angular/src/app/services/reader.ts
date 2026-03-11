@@ -15,8 +15,9 @@ export class Reader {
     return this.http.get<any>(`${environment.studentQueryUrl}${this.apiEndpoint}examView/${this.studentId}`);
   }
 
-  getQuestion(submissionId: string, questionId: string): Observable<any> {
-    return this.http.get<any>(`${environment.studentQueryUrl}${this.apiEndpoint}questionView/${submissionId}/${questionId}`);
+  getQuestion(submissionId: string, questionId: string|null): Observable<any> {
+    const questEnd = questionId !==null ? `/${questionId}` : '';
+    return this.http.get<any>(`${environment.studentQueryUrl}${this.apiEndpoint}questionView/${submissionId}${questEnd}`);
   }
 
   getSubmissions(): Observable<any> {

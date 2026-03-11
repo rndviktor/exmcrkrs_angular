@@ -125,9 +125,7 @@ export class MainView implements OnDestroy {
     this.errorMessage = null;
     this.publishableKey = null;
     if (resp && resp.SubmissionInProcess) {
-      setTimeout(() => {
-        window.location.reload();
-      }, 500)
+      this.router.navigate([resp.SubmissionInProcess.ExamSubmissionId, 'question'])
     }
   }
 

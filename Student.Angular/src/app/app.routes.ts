@@ -9,6 +9,11 @@ export const routes: Routes = [
         title: 'MainView'
     },
     {
+      path: ':submissionId/question',
+      component: Question,
+      title: 'Question',
+    },
+    {
         path: ':submissionId/question/:questionId',
         component: Question,
         title: 'Question',
