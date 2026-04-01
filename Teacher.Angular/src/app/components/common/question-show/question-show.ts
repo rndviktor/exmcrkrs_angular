@@ -27,7 +27,7 @@ import { QuestionType } from "../../../types";
         </div>
       </div>
       <div class="flex flex-row">
-        <div class="whitespace-pre-line flex-1 bg-white">{{ question.Content }}</div>
+        <div class="whitespace-pre-line flex-1 bg-white question-content" [innerHTML]="question.Content"></div>
       </div>
       <ul>
         @for (ans of question.Answers; track ans.AnswerId; let even = $even) {

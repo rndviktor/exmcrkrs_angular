@@ -19,8 +19,7 @@ import { ExamService } from '../../../services/exam-service';
               <app-home-button (click)="routeHome()"/>
               <app-trash-button (click)="showConfirm(true)"/>
           </div>
-          <app-content-editor-form (submitForm)="handleContentSubmit($event)" [content]="content"
-                                   [isEditMode]="editMode"/>
+          <app-content-editor-form (onSubmit)="handleContentSubmit($event)" [examId]="examId!" [content]="content" [createNew]="!editMode"/>
           @if (answers?.length) {
               <ul>
                   @for (ans of answers; track ans.AnswerId; let even = $even) {
@@ -109,8 +108,7 @@ export class QuestionEdit implements OnInit, OnDestroy {
     }
   }
 
-  async handleContentSubmit(data: { content: string | null }) {
-    const { content } = data;
+  async handleContentSubmit(content: string) {
     if (this.editMode) {
       const question = { QuestionId: this.questionId, Content: content };
       await this.writer.updateQuestionContent(this.examId!, question)

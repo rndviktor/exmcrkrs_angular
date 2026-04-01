@@ -45,6 +45,12 @@ export class Writer {
     this.examService.updateQuestionContentAtExam(examId, question)
   }
 
+  async postImage(formData: FormData): Promise<any> {
+    const target = `${environment.teacherCmdUrl}/${this.apiPrefix}/Upload/Image`;
+    const {url} =  await firstValueFrom(this.http.post<any>(target, formData));
+    return url;
+  }
+
   async addAnswer(examId: string, questionId: string, answer: AnswerType): Promise<any> {
     const target = `${environment.teacherCmdUrl}/${this.apiPrefix}/addAnswer/${examId}`;
     const {Id: answerId} = await firstValueFrom(this.http.put<any>(target, { ...answer, questionId }));

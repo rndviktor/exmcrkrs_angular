@@ -16,7 +16,7 @@ import { Writer } from '../../../services/writer';
   template: `
     <div class="p-4 bg-indigo-100">
       <div class="grid gap-4">
-        <div class="whitespace-pre-line col-span-10 bg-white" [innerHTML]="content"></div>
+        <div class="whitespace-pre-line col-span-10 bg-white question-content" [innerHTML]="content"></div>
       </div>
       @if (data) {
         <ul class="bg-transparent">

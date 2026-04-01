@@ -7,7 +7,7 @@ import { QuestionCorrectness, QuestionSubmissionSelection, QuestionType } from '
   template: `
     @if (content) {
       <div class="grid gap-4">
-        <div class="whitespace-pre-line col-span-10 bg-white border" [innerHTML]="content"></div>
+        <div class="whitespace-pre-line col-span-10 bg-white border question-content" [innerHTML]="content"></div>
       </div>
     }
     <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-md">
